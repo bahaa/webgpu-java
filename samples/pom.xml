@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>io.github.bahaa.webgpu</groupId>
+        <artifactId>webgpu-java</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>samples</artifactId>
+
+    <properties>
+        <version.glfw>3.4</version.glfw>
+
+        <glfw.download.base.url>https://github.com/glfw/glfw/releases/download/${version.glfw}</glfw.download.base.url>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>io.github.bahaa.webgpu</groupId>
+            <artifactId>webgpu</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.github.download-maven-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <version>${version.download-maven-plugin}</version>
+                <configuration>
+                    <unpack>true</unpack>
+                    <failOnError>true</failOnError>
+                    <alwaysVerifyChecksum>true</alwaysVerifyChecksum>
+                    <fileMappers>
+                        <org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                            <pattern>^glfw-.*?\/</pattern>
+                            <replacement>./</replacement>
+                        </org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                        <org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                            <pattern>lib-arm64\/</pattern>
+                            <replacement>./</replacement>
+                        </org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                        <org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                            <pattern>lib-vc2022\/</pattern>
+                            <replacement>./</replacement>
+                        </org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                    </fileMappers>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>download-glfw-headers</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>${glfw.download.base.url}/glfw-${version.glfw}.bin.MACOS.zip</url>
+                            <includes>*/include/**</includes>
+                            <outputDirectory>${build.directory}/</outputDirectory>
+                            <md5>c0ef59e23631c341e25f2729fd07cac7</md5>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>download-glfw-macos-aarch64</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>${glfw.download.base.url}/glfw-${version.glfw}.bin.MACOS.zip</url>
+                            <includes>*/lib-arm64/*.dylib</includes>
+                            <outputDirectory>${build.directory}/classes/foreign/macos-aarch64</outputDirectory>
+                            <md5>c0ef59e23631c341e25f2729fd07cac7</md5>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>download-glfw-windows-x86-64</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>${glfw.download.base.url}/glfw-${version.glfw}.bin.WIN64.zip</url>
+                            <includes>*/lib-vc2022/*.dll</includes>
+                            <outputDirectory>${build.directory}/classes/foreign/windows-x86_64</outputDirectory>
+                            <md5>725c211378d00f3eee5df5acc8108742</md5>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>io.github.coffeelibs</groupId>
+                <artifactId>jextract-maven-plugin</artifactId>
+                <version>${version.jextract-maven-plugin}</version>
+                <configuration>
+                    <executable>jextract</executable>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>glfw-jextract</id>
+                        <goals>
+                            <goal>sources</goal>
+                        </goals>
+                        <phase>generate-sources</phase>
+                        <configuration>
+                            <headerFile>${project.build.directory}/include/GLFW/glfw3.h</headerFile>
+                            <libraries>
+                                <library>glfw.3</library>
+                            </libraries>
+                            <targetPackage>io.github.bahaa.webgpu.samples.glfw.ffm</targetPackage>
+                            <headerClassName>glfw3_h</headerClassName>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
