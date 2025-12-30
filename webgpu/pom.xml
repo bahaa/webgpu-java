@@ -44,7 +44,7 @@
         </dependency>
         <dependency>
             <groupId>com.tngtech.archunit</groupId>
-            <artifactId>archunit</artifactId>
+            <artifactId>archunit-junit5</artifactId>
             <version>${version.archunit}</version>
             <scope>test</scope>
         </dependency>

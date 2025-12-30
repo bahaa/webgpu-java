@@ -1,11 +1,6 @@
 package io.github.bahaa.webgpu.api;
 
-import java.lang.foreign.MemorySegment;
+public interface ObjectBase extends NativeObject {
 
-public interface ObjectBase extends AutoCloseable {
-
-    MemorySegment pointer();
-
-    @Override
-    void close();
+    void label(String label);
 }

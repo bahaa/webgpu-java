@@ -57,6 +57,12 @@ public abstract class SampleBase {
                             .build())
                     .join();
 
+            IO.println(adapter.adapterInfo());
+
+            if (!adapter.hasFeature(FeatureName.BGRA8UNORM_STORAGE)) {
+                IO.println("Adapter does not support BGRA8UNORM_STORAGE");
+            }
+
             final var device = adapter.requestDevice(DeviceDescriptor.builder()
                             .build())
                     .join();

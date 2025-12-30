@@ -3,6 +3,7 @@ package io.github.bahaa.webgpu.internal;
 import io.github.bahaa.webgpu.api.Adapter;
 import io.github.bahaa.webgpu.api.Surface;
 import io.github.bahaa.webgpu.api.WebGpuException;
+import io.github.bahaa.webgpu.api.model.StringView;
 import io.github.bahaa.webgpu.api.model.SurfaceCapabilities;
 import io.github.bahaa.webgpu.api.model.SurfaceConfiguration;
 import io.github.bahaa.webgpu.api.model.SurfaceTexture;
@@ -66,6 +67,13 @@ class SurfaceImpl extends ObjectBaseImpl implements Surface {
 
         if (status != 1) {
             throw new WebGpuException("wgpuSurfacePresent failed with status %d".formatted(status));
+        }
+    }
+
+    @Override
+    public void label(final String label) {
+        try (final var arena = Arena.ofConfined()) {
+            wgpuSurfaceSetLabel(pointer(), StringView.from(label).toSegment(arena));
         }
     }
 

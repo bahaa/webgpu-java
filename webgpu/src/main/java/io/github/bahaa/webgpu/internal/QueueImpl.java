@@ -4,6 +4,7 @@ import io.github.bahaa.webgpu.api.Buffer;
 import io.github.bahaa.webgpu.api.CommandBuffer;
 import io.github.bahaa.webgpu.api.Queue;
 import io.github.bahaa.webgpu.api.model.Extent3D;
+import io.github.bahaa.webgpu.api.model.StringView;
 import io.github.bahaa.webgpu.api.model.TexelCopyBufferLayout;
 import io.github.bahaa.webgpu.api.model.TexelCopyTextureInfo;
 
@@ -50,6 +51,13 @@ class QueueImpl extends ObjectBaseImpl implements Queue {
         try (final var arena = Arena.ofConfined()) {
             wgpuQueueWriteTexture(this.pointer(), destination.toSegmentAddress(arena), data, dataSize,
                     dataLayout.toSegmentAddress(arena), writeSize.toSegmentAddress(arena));
+        }
+    }
+
+    @Override
+    public void label(final String label) {
+        try (final var arena = Arena.ofConfined()) {
+            wgpuQueueSetLabel(pointer(), StringView.from(label).toSegment(arena));
         }
     }
 

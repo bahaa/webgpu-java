@@ -8,7 +8,7 @@ import io.github.bahaa.webgpu.internal.InstanceImpl;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-public interface Instance extends ObjectBase {
+public interface Instance extends NativeObject {
 
     /**
      * Create a WGPUInstance

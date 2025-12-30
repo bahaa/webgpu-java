@@ -111,7 +111,7 @@ public enum TextureFormat {
                 return format;
             }
         }
-        throw new IllegalArgumentException("Unknown WGPUTextureFormat value: " + value);
+        throw new IllegalArgumentException("Unknown TextureFormat value %d".formatted(value));
     }
 
     public int value() {

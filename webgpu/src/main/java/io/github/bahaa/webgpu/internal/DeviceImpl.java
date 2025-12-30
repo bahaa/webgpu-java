@@ -119,6 +119,13 @@ class DeviceImpl extends ObjectBaseImpl implements Device {
         }
     }
 
+    @Override
+    public void label(final String label) {
+        try (final var arena = Arena.ofConfined()) {
+            wgpuDeviceSetLabel(pointer(), StringView.from(label).toSegment(arena));
+        }
+    }
+
     private static class Cleaner extends ObjectCleaner {
 
         protected Cleaner(final MemorySegment pointer) {

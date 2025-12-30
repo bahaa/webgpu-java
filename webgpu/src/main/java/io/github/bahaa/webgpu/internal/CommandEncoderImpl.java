@@ -7,6 +7,7 @@ import io.github.bahaa.webgpu.api.RenderPassEncoder;
 import io.github.bahaa.webgpu.api.model.CommandBufferDescriptor;
 import io.github.bahaa.webgpu.api.model.ComputePassDescriptor;
 import io.github.bahaa.webgpu.api.model.RenderPassDescriptor;
+import io.github.bahaa.webgpu.api.model.StringView;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -55,6 +56,13 @@ class CommandEncoderImpl extends ObjectBaseImpl implements CommandEncoder {
                     MemorySegment.NULL : descriptor.toSegmentAddress(arena));
             assertObject(buffer, "wgpuCommandEncoderFinish");
             return CommandBufferImpl.from(buffer);
+        }
+    }
+
+    @Override
+    public void label(final String label) {
+        try (final var arena = Arena.ofConfined()) {
+            wgpuCommandEncoderSetLabel(pointer(), StringView.from(label).toSegment(arena));
         }
     }
 

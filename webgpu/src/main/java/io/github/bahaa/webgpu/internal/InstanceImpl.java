@@ -16,7 +16,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static io.github.bahaa.webgpu.ffm.webgpu_h.*;
 
-public class InstanceImpl extends ObjectBaseImpl implements Instance {
+public class InstanceImpl extends NativeObjectImpl implements Instance {
 
     private InstanceImpl(final MemorySegment pointer) {
         super(pointer);

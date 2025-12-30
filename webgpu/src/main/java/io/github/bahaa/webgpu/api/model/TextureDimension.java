@@ -12,6 +12,16 @@ public enum TextureDimension {
         this.value = value;
     }
 
+    public static TextureDimension fromValue(final int value) {
+        for (final var dimension : values()) {
+            if (dimension.value == value) {
+                return dimension;
+            }
+        }
+
+        throw new IllegalArgumentException("Unknown TextureDimension value %d".formatted(value));
+    }
+
     public int value() {
         return this.value;
     }

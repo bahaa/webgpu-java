@@ -4,8 +4,10 @@ import io.github.bahaa.webgpu.ffm.WGPUStringView;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
+import java.lang.foreign.ValueLayout;
+import java.nio.charset.StandardCharsets;
 
-class StringView implements StructBlueprint {
+public class StringView implements StructBlueprint {
 
     private final String value;
 
@@ -15,6 +17,18 @@ class StringView implements StructBlueprint {
 
     public static StringView from(final String value) {
         return new StringView(value);
+    }
+
+    public static StringView from(final MemorySegment struct) {
+        final var length = (int) WGPUStringView.length(struct);
+        final var bytes = new byte[length];
+
+        MemorySegment.copy(WGPUStringView.data(struct), ValueLayout.JAVA_BYTE, 0, bytes, 0, length);
+        return new StringView(new String(bytes, StandardCharsets.UTF_8));
+    }
+
+    public String value() {
+        return this.value;
     }
 
     @Override

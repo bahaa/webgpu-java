@@ -4,7 +4,10 @@ import io.github.bahaa.webgpu.ffm.WGPUSurfaceCapabilities;
 
 import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 public class SurfaceCapabilities {
 
@@ -25,13 +28,6 @@ public class SurfaceCapabilities {
 
     public static SurfaceCapabilities from(final MemorySegment segment) {
         final var usagesBits = WGPUSurfaceCapabilities.usages(segment);
-        final var usages = EnumSet.noneOf(TextureUsage.class);
-
-        Arrays.stream(TextureUsage.values()).forEach(flag -> {
-            if ((flag.value() & usagesBits) != 0) {
-                usages.add(flag);
-            }
-        });
 
         final var formatCount = WGPUSurfaceCapabilities.formatCount(segment);
         final var formats = new ArrayList<TextureFormat>();
@@ -61,7 +57,7 @@ public class SurfaceCapabilities {
         }
 
         return new SurfaceCapabilities(
-                Collections.unmodifiableSet(usages),
+                Collections.unmodifiableSet(TextureUsage.fromMask(usagesBits)),
                 Collections.unmodifiableList(formats),
                 Collections.unmodifiableList(presentModes),
                 Collections.unmodifiableList(alphaModes)

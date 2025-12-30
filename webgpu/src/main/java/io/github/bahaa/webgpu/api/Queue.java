@@ -35,4 +35,14 @@ public interface Queue extends ObjectBase {
 
     void writeTexture(final TexelCopyTextureInfo destination, final MemorySegment data, final long dataSize,
                       final TexelCopyBufferLayout dataLayout, final Extent3D writeSize);
+
+    default void writeTexture(final TexelCopyTextureInfo destination, final byte[] data,
+                              final TexelCopyBufferLayout dataLayout, final Extent3D writeSize) {
+        try (final var arena = Arena.ofConfined()) {
+            final var segment = MemorySegment.ofArray(data);
+            final var nativeSegment = arena.allocate(segment.byteSize());
+            nativeSegment.copyFrom(segment);
+            writeTexture(destination, nativeSegment, nativeSegment.byteSize(), dataLayout, writeSize);
+        }
+    }
 }

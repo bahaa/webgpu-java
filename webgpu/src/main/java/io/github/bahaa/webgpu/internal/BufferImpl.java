@@ -1,7 +1,9 @@
 package io.github.bahaa.webgpu.internal;
 
 import io.github.bahaa.webgpu.api.Buffer;
+import io.github.bahaa.webgpu.api.model.StringView;
 
+import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
 import static io.github.bahaa.webgpu.ffm.webgpu_h.*;
@@ -35,6 +37,13 @@ class BufferImpl extends ObjectBaseImpl implements Buffer {
     @Override
     public void unmap() {
         wgpuBufferUnmap(this.pointer());
+    }
+
+    @Override
+    public void label(final String label) {
+        try (final var arena = Arena.ofConfined()) {
+            wgpuBufferSetLabel(pointer(), StringView.from(label).toSegment(arena));
+        }
     }
 
     private static class Cleaner extends ObjectCleaner {

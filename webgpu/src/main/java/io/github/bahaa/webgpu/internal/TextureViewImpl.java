@@ -1,10 +1,13 @@
 package io.github.bahaa.webgpu.internal;
 
 import io.github.bahaa.webgpu.api.TextureView;
+import io.github.bahaa.webgpu.api.model.StringView;
 
+import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
 import static io.github.bahaa.webgpu.ffm.webgpu_h.wgpuTextureViewRelease;
+import static io.github.bahaa.webgpu.ffm.webgpu_h.wgpuTextureViewSetLabel;
 
 class TextureViewImpl extends ObjectBaseImpl implements TextureView {
     protected TextureViewImpl(final MemorySegment pointer) {
@@ -18,6 +21,13 @@ class TextureViewImpl extends ObjectBaseImpl implements TextureView {
     @Override
     protected ObjectCleaner cleaner() {
         return new Cleaner(this.pointer());
+    }
+
+    @Override
+    public void label(final String label) {
+        try (final var arena = Arena.ofConfined()) {
+            wgpuTextureViewSetLabel(pointer(), StringView.from(label).toSegment(arena));
+        }
     }
 
     private static class Cleaner extends ObjectCleaner {

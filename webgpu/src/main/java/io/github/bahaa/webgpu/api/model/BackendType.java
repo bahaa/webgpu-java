@@ -17,6 +17,15 @@ public enum BackendType {
         this.value = value;
     }
 
+    public static BackendType fromValue(final int value) {
+        for (final var backendType : values()) {
+            if (backendType.value == value) {
+                return backendType;
+            }
+        }
+        return UNDEFINED;
+    }
+
     public int value() {
         return this.value;
     }

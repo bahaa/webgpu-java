@@ -2,11 +2,12 @@ package io.github.bahaa.webgpu.internal;
 
 import io.github.bahaa.webgpu.api.BindGroupLayout;
 import io.github.bahaa.webgpu.api.RenderPipeline;
+import io.github.bahaa.webgpu.api.model.StringView;
 
+import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
-import static io.github.bahaa.webgpu.ffm.webgpu_h.wgpuRenderPipelineGetBindGroupLayout;
-import static io.github.bahaa.webgpu.ffm.webgpu_h.wgpuRenderPipelineRelease;
+import static io.github.bahaa.webgpu.ffm.webgpu_h.*;
 
 class RenderPipelineImpl extends ObjectBaseImpl implements RenderPipeline {
 
@@ -28,6 +29,13 @@ class RenderPipelineImpl extends ObjectBaseImpl implements RenderPipeline {
         final var group = wgpuRenderPipelineGetBindGroupLayout(pointer(), groupIndex);
         assertObject(group, "wgpuRenderPipelineGetBindGroupLayout");
         return BindGroupLayoutImpl.from(group);
+    }
+
+    @Override
+    public void label(final String label) {
+        try (final var arena = Arena.ofConfined()) {
+            wgpuRenderPipelineSetLabel(pointer(), StringView.from(label).toSegment(arena));
+        }
     }
 
     private static class Cleaner extends ObjectCleaner {

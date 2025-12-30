@@ -2,17 +2,19 @@ package io.github.bahaa.webgpu.internal;
 
 import io.github.bahaa.webgpu.api.Adapter;
 import io.github.bahaa.webgpu.api.Device;
-import io.github.bahaa.webgpu.api.model.DeviceDescriptor;
+import io.github.bahaa.webgpu.api.model.*;
+import io.github.bahaa.webgpu.ffm.WGPUAdapterInfo;
 import io.github.bahaa.webgpu.ffm.WGPURequestDeviceCallback;
 import io.github.bahaa.webgpu.ffm.WGPURequestDeviceCallbackInfo;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 import static io.github.bahaa.webgpu.ffm.webgpu_h.*;
 
-class AdapterImpl extends ObjectBaseImpl implements Adapter {
+class AdapterImpl extends NativeObjectImpl implements Adapter {
 
     protected AdapterImpl(final MemorySegment pointer) {
         super(pointer);
@@ -28,7 +30,8 @@ class AdapterImpl extends ObjectBaseImpl implements Adapter {
     }
 
     @Override
-    public CompletableFuture<Device> requestDevice(final DeviceDescriptor deviceDescriptor) {
+    public CompletableFuture<Device> requestDevice(final DeviceDescriptor descriptor) {
+        Objects.requireNonNull(descriptor, "descriptor is null");
         final var arena = Arena.ofAuto();
         final var future = new CompletableFuture<Device>();
 
@@ -48,9 +51,35 @@ class AdapterImpl extends ObjectBaseImpl implements Adapter {
         WGPURequestDeviceCallbackInfo.callback(callbackInfo, callbackStub);
 
         var _ = wgpuAdapterRequestDevice(arena, this.pointer(),
-                deviceDescriptor.toSegment(arena), callbackInfo);
+                descriptor.toSegment(arena), callbackInfo);
 
         return future;
+    }
+
+    @Override
+    public AdapterInfo adapterInfo() {
+        try (final var arena = Arena.ofConfined()) {
+            final var infoStruct = WGPUAdapterInfo.allocate(arena);
+            wgpuAdapterGetInfo(pointer(), infoStruct);
+            final var info = new AdapterInfo(
+                    StringView.from(WGPUAdapterInfo.vendor(infoStruct)).value(),
+                    StringView.from(WGPUAdapterInfo.architecture(infoStruct)).value(),
+                    StringView.from(WGPUAdapterInfo.device(infoStruct)).value(),
+                    StringView.from(WGPUAdapterInfo.description(infoStruct)).value(),
+                    BackendType.fromValue(WGPUAdapterInfo.backendType(infoStruct)),
+                    AdapterType.fromValue(WGPUAdapterInfo.adapterType(infoStruct)),
+                    WGPUAdapterInfo.vendorID(infoStruct),
+                    WGPUAdapterInfo.deviceID(infoStruct)
+            );
+            wgpuAdapterInfoFreeMembers(infoStruct);
+            return info;
+        }
+    }
+
+    @Override
+    public boolean hasFeature(final FeatureName feature) {
+        Objects.requireNonNull(feature, "feature is null");
+        return wgpuAdapterHasFeature(pointer(), feature.value()) > 0;
     }
 
     private static class Cleaner extends ObjectCleaner {

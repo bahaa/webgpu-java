@@ -8,8 +8,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.DataBufferByte;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.lang.foreign.Arena;
-import java.lang.foreign.MemorySegment;
 import java.util.EnumSet;
 
 public class TexturedCube extends CubeBase {
@@ -50,19 +48,12 @@ public class TexturedCube extends CubeBase {
                     ))
                     .build());
 
-            final var arena = Arena.ofAuto();
-
             final var pixels = ((DataBufferByte) image.getRaster().getDataBuffer()).getData();
-
-            final var segment = MemorySegment.ofArray(pixels);
-            final var nativeSegment = arena.allocate(segment.byteSize());
-            nativeSegment.copyFrom(segment);
 
             device.queue().writeTexture(TexelCopyTextureInfo.builder()
                             .texture(cubeTexture)
                             .build(),
-                    nativeSegment,
-                    nativeSegment.byteSize(),
+                    pixels,
                     TexelCopyBufferLayout.builder()
                             .bytesPerRow(image.getWidth() * 4)
                             .rowsPerImage(image.getHeight())
