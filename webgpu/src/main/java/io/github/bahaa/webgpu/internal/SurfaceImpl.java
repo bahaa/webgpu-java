@@ -53,6 +53,11 @@ class SurfaceImpl extends ObjectBaseImpl implements Surface {
     }
 
     @Override
+    public void unconfigure() {
+        wgpuSurfaceUnconfigure(this.pointer());
+    }
+
+    @Override
     public SurfaceTexture currentTexture() {
         try (final var arena = Arena.ofConfined()) {
             final var struct = WGPUSurfaceTexture.allocate(arena);

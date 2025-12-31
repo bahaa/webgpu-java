@@ -11,6 +11,8 @@ public interface Surface extends ObjectBase {
 
     void configure(final SurfaceConfiguration configuration);
 
+    void unconfigure();
+
     SurfaceTexture currentTexture();
 
     void present();
