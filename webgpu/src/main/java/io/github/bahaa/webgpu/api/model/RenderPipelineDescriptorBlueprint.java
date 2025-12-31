@@ -3,6 +3,7 @@ package io.github.bahaa.webgpu.api.model;
 
 import io.github.bahaa.webgpu.api.PipelineLayout;
 import io.github.bahaa.webgpu.ffm.WGPURenderPipelineDescriptor;
+import io.helidon.builder.api.Option;
 import io.helidon.builder.api.Prototype;
 
 import java.lang.foreign.Arena;
@@ -18,10 +19,12 @@ interface RenderPipelineDescriptorBlueprint extends StructBlueprint {
 
     VertexState vertex();
 
+    @Option.DefaultCode("PrimitiveState.create()")
     Optional<PrimitiveState> primitive();
 
     Optional<DepthStencilState> depthStencil();
 
+    @Option.DefaultCode("MultisampleState.create()")
     MultisampleState multisample();
 
     FragmentState fragment();

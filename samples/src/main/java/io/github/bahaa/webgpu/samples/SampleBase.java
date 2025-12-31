@@ -5,7 +5,7 @@ import io.github.bahaa.webgpu.api.model.*;
 import io.github.bahaa.webgpu.samples.platform.macos.appkit.NSWindow;
 import io.github.bahaa.webgpu.samples.platform.macos.ca.CAMetalLayer;
 import io.github.bahaa.webgpu.tools.LibraryLoader;
-import io.github.bahaa.webgpu.tools.OperatingSystem;
+import io.github.bahaa.webgpu.tools.Platform;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -135,7 +135,7 @@ public abstract class SampleBase {
     }
 
     protected Surface createSurface(final MemorySegment window, final Instance instance) {
-        return switch (OperatingSystem.current()) {
+        return switch (Platform.currentOS()) {
             case WINDOWS, LINUX -> throw new UnsupportedOperationException("Not supported yet.");
             case MACOS -> createMetalSurface(window, instance);
             case OTHER -> throw new UnsupportedOperationException("Unknown operating system!");
@@ -155,6 +155,19 @@ public abstract class SampleBase {
         } catch (final IOException e) {
             throw new UncheckedIOException(e);
         }
+    }
+
+    protected float randomBetween(final float min, final float max) {
+        return min + (float) Math.random() * (max - min);
+    }
+
+    protected ShaderModule loadShader(final Device device, final String path) {
+        return device.createShaderModule(ShaderModuleDescriptor.builder()
+                .label("Shader")
+                .source(ShaderSource.wgsl()
+                        .code(loadFromClassPath(path))
+                        .build())
+                .build());
     }
 
     private Surface createMetalSurface(final MemorySegment window, final Instance instance) {

@@ -38,7 +38,7 @@ public enum LibraryLoader {
     private static Path generateLibraryPath(final String name) {
         return Path.of(
                 "foreign",
-                "%s-%s".formatted(OperatingSystem.current().id(), System.getProperty("os.arch")),
+                "%s-%s".formatted(Platform.currentOS().id(), System.getProperty("os.arch")),
                 System.mapLibraryName(name)
         );
     }

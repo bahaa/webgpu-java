@@ -120,6 +120,15 @@ class DeviceImpl extends ObjectBaseImpl implements Device {
     }
 
     @Override
+    public RenderBundleEncoder createRenderBundleEncoder(final RenderBundleEncoderDescriptor descriptor) {
+        try (final var arena = Arena.ofConfined()) {
+            final var texture = wgpuDeviceCreateRenderBundleEncoder(this.pointer(), descriptor.toSegment(arena));
+            assertObject(texture, "wgpuDeviceCreateRenderBundleEncoder");
+            return RenderBundleEncoderImpl.from(texture);
+        }
+    }
+
+    @Override
     public void label(final String label) {
         try (final var arena = Arena.ofConfined()) {
             wgpuDeviceSetLabel(pointer(), StringView.from(label).toSegment(arena));

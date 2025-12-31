@@ -58,8 +58,86 @@ public class Matrix4x4F {
         );
     }
 
+    public static Matrix4x4F lookAt(final Vec3F eye, final Vec3F target, final Vec3F up) {
+        final var vz = Vec3F.subtract(eye, target).normalize();
+        final var vx = Vec3F.cross(up, vz).normalize();
+        final var vy = Vec3F.cross(vz, vx).normalize();
+
+        // Eye angles
+        final var ex = -Vec3F.dot(vx, eye);
+        final var ey = -Vec3F.dot(vy, eye);
+        final var ez = -Vec3F.dot(vz, eye);
+
+        return new Matrix4x4F(
+                vx.x(), vy.x(), vz.x(), 0.0f,
+                vx.y(), vy.y(), vz.y(), 0.0f,
+                vx.z(), vy.z(), vz.z(), 0.0f,
+                ex, ey, ez, 1.0f
+        );
+    }
+
+    public static Matrix4x4F multiply(final Matrix4x4F one, final Matrix4x4F another) {
+        final var a00 = one.data[0];
+        final var a01 = one.data[1];
+        final var a02 = one.data[2];
+        final var a03 = one.data[3];
+        final var a10 = one.data[4];
+        final var a11 = one.data[4 + 1];
+        final var a12 = one.data[4 + 2];
+        final var a13 = one.data[4 + 3];
+        final var a20 = one.data[8];
+        final var a21 = one.data[8 + 1];
+        final var a22 = one.data[8 + 2];
+        final var a23 = one.data[8 + 3];
+        final var a30 = one.data[12];
+        final var a31 = one.data[12 + 1];
+        final var a32 = one.data[12 + 2];
+        final var a33 = one.data[12 + 3];
+
+        final var b00 = another.data[0];
+        final var b01 = another.data[1];
+        final var b02 = another.data[2];
+        final var b03 = another.data[3];
+        final var b10 = another.data[4];
+        final var b11 = another.data[4 + 1];
+        final var b12 = another.data[4 + 2];
+        final var b13 = another.data[4 + 3];
+        final var b20 = another.data[8];
+        final var b21 = another.data[8 + 1];
+        final var b22 = another.data[8 + 2];
+        final var b23 = another.data[8 + 3];
+        final var b30 = another.data[12];
+        final var b31 = another.data[12 + 1];
+        final var b32 = another.data[12 + 2];
+        final var b33 = another.data[12 + 3];
+
+        return new Matrix4x4F(
+                a00 * b00 + a10 * b01 + a20 * b02 + a30 * b03,
+                a01 * b00 + a11 * b01 + a21 * b02 + a31 * b03,
+                a02 * b00 + a12 * b01 + a22 * b02 + a32 * b03,
+                a03 * b00 + a13 * b01 + a23 * b02 + a33 * b03,
+                a00 * b10 + a10 * b11 + a20 * b12 + a30 * b13,
+                a01 * b10 + a11 * b11 + a21 * b12 + a31 * b13,
+                a02 * b10 + a12 * b11 + a22 * b12 + a32 * b13,
+                a03 * b10 + a13 * b11 + a23 * b12 + a33 * b13,
+                a00 * b20 + a10 * b21 + a20 * b22 + a30 * b23,
+                a01 * b20 + a11 * b21 + a21 * b22 + a31 * b23,
+                a02 * b20 + a12 * b21 + a22 * b22 + a32 * b23,
+                a03 * b20 + a13 * b21 + a23 * b22 + a33 * b23,
+                a00 * b30 + a10 * b31 + a20 * b32 + a30 * b33,
+                a01 * b30 + a11 * b31 + a21 * b32 + a31 * b33,
+                a02 * b30 + a12 * b31 + a22 * b32 + a32 * b33,
+                a03 * b30 + a13 * b31 + a23 * b32 + a33 * b33
+        );
+    }
+
     public float[] data() {
         return this.data;
+    }
+
+    public void copyTo(final float[] array, final int offset) {
+        Objects.requireNonNull(array);
+        System.arraycopy(this.data, 0, array, offset, this.data.length);
     }
 
     public void translate(final float v0, final float v1, final float v2) {
@@ -151,58 +229,7 @@ public class Matrix4x4F {
     }
 
     public Matrix4x4F multiply(final Matrix4x4F other) {
-        final var a00 = this.data[0];
-        final var a01 = this.data[1];
-        final var a02 = this.data[2];
-        final var a03 = this.data[3];
-        final var a10 = this.data[4];
-        final var a11 = this.data[4 + 1];
-        final var a12 = this.data[4 + 2];
-        final var a13 = this.data[4 + 3];
-        final var a20 = this.data[8];
-        final var a21 = this.data[8 + 1];
-        final var a22 = this.data[8 + 2];
-        final var a23 = this.data[8 + 3];
-        final var a30 = this.data[12];
-        final var a31 = this.data[12 + 1];
-        final var a32 = this.data[12 + 2];
-        final var a33 = this.data[12 + 3];
-
-        final var b00 = other.data[0];
-        final var b01 = other.data[1];
-        final var b02 = other.data[2];
-        final var b03 = other.data[3];
-        final var b10 = other.data[4];
-        final var b11 = other.data[4 + 1];
-        final var b12 = other.data[4 + 2];
-        final var b13 = other.data[4 + 3];
-        final var b20 = other.data[8];
-        final var b21 = other.data[8 + 1];
-        final var b22 = other.data[8 + 2];
-        final var b23 = other.data[8 + 3];
-        final var b30 = other.data[12];
-        final var b31 = other.data[12 + 1];
-        final var b32 = other.data[12 + 2];
-        final var b33 = other.data[12 + 3];
-
-        return new Matrix4x4F(
-                a00 * b00 + a10 * b01 + a20 * b02 + a30 * b03,
-                a01 * b00 + a11 * b01 + a21 * b02 + a31 * b03,
-                a02 * b00 + a12 * b01 + a22 * b02 + a32 * b03,
-                a03 * b00 + a13 * b01 + a23 * b02 + a33 * b03,
-                a00 * b10 + a10 * b11 + a20 * b12 + a30 * b13,
-                a01 * b10 + a11 * b11 + a21 * b12 + a31 * b13,
-                a02 * b10 + a12 * b11 + a22 * b12 + a32 * b13,
-                a03 * b10 + a13 * b11 + a23 * b12 + a33 * b13,
-                a00 * b20 + a10 * b21 + a20 * b22 + a30 * b23,
-                a01 * b20 + a11 * b21 + a21 * b22 + a31 * b23,
-                a02 * b20 + a12 * b21 + a22 * b22 + a32 * b23,
-                a03 * b20 + a13 * b21 + a23 * b22 + a33 * b23,
-                a00 * b30 + a10 * b31 + a20 * b32 + a30 * b33,
-                a01 * b30 + a11 * b31 + a21 * b32 + a31 * b33,
-                a02 * b30 + a12 * b31 + a22 * b32 + a32 * b33,
-                a03 * b30 + a13 * b31 + a23 * b32 + a33 * b33
-        );
+        return multiply(this, other);
     }
 
     @Override

@@ -26,4 +26,6 @@ public interface Device extends ObjectBase {
     Texture createTexture(final TextureDescriptor descriptor);
 
     Sampler createSampler(final @Nullable SamplerDescriptor descriptor);
+
+    RenderBundleEncoder createRenderBundleEncoder(final RenderBundleEncoderDescriptor descriptor);
 }

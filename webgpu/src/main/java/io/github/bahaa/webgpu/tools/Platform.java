@@ -1,9 +1,9 @@
 package io.github.bahaa.webgpu.tools;
 
-public enum OperatingSystem {
+public enum Platform {
     ;
 
-    public static OS current() {
+    public static OS currentOS() {
         final var osName = System.getProperty("os.name");
 
         if (osName == null) {

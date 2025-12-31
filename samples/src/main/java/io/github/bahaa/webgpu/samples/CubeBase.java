@@ -43,17 +43,12 @@ public abstract class CubeBase extends SampleBase {
         this.verticesBuffer.getMappedRange().copyFrom(MemorySegment.ofArray(CUBE_VERTICES));
         this.verticesBuffer.unmap();
 
-        final var shaderModule = device.createShaderModule(ShaderModuleDescriptor.builder()
-                .label("Shader")
-                .source(ShaderSource.wgsl()
-                        .code(loadFromClassPath(shaderFileName()))
-                        .build())
-                .build());
+        final var shaderModule = loadShader(device, shaderFileName());
 
         this.renderPipeline = device.createRenderPipeline(RenderPipelineDescriptor.builder()
                 .label("RenderPipeline")
                 .vertex(VertexState.builder()
-                        .module(shaderModule)
+                        .module(loadShader(device, shaderFileName()))
                         .entryPoint("vs_main")
                         .addBuffer(builder -> builder
                                 .arrayStride(CUBE_VERTEX_SIZE)
