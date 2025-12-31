@@ -1,13 +1,7 @@
 package io.github.bahaa.webgpu.internal;
 
-import io.github.bahaa.webgpu.api.CommandBuffer;
-import io.github.bahaa.webgpu.api.CommandEncoder;
-import io.github.bahaa.webgpu.api.ComputePassEncoder;
-import io.github.bahaa.webgpu.api.RenderPassEncoder;
-import io.github.bahaa.webgpu.api.model.CommandBufferDescriptor;
-import io.github.bahaa.webgpu.api.model.ComputePassDescriptor;
-import io.github.bahaa.webgpu.api.model.RenderPassDescriptor;
-import io.github.bahaa.webgpu.api.model.StringView;
+import io.github.bahaa.webgpu.api.*;
+import io.github.bahaa.webgpu.api.model.*;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -57,6 +51,79 @@ class CommandEncoderImpl extends ObjectBaseImpl implements CommandEncoder {
             assertObject(buffer, "wgpuCommandEncoderFinish");
             return CommandBufferImpl.from(buffer);
         }
+    }
+
+    @Override
+    public void clearBuffer(final Buffer buffer, final long offset, final long size) {
+        wgpuCommandEncoderClearBuffer(pointer(), buffer.pointer(), offset, size);
+    }
+
+    @Override
+    public void copyBufferToBuffer(final Buffer source, final long sourceOffset, final Buffer destination,
+                                   final long destinationOffset,
+                                   final long size) {
+        wgpuCommandEncoderCopyBufferToBuffer(this.pointer(),
+                source.pointer(), sourceOffset, destination.pointer(), destinationOffset, size);
+
+    }
+
+    @Override
+    public void copyBufferToTexture(final TexelCopyBufferInfo source, final TexelCopyTextureInfo destination,
+                                    final Extent3D copySize) {
+        try (final var arena = Arena.ofConfined()) {
+            wgpuCommandEncoderCopyBufferToTexture(this.pointer(), source.toSegmentAddress(arena),
+                    destination.toSegmentAddress(arena), copySize.toSegmentAddress(arena));
+        }
+    }
+
+    @Override
+    public void copyTextureToBuffer(final TexelCopyTextureInfo source, final TexelCopyBufferInfo destination,
+                                    final Extent3D copySize) {
+        try (final var arena = Arena.ofConfined()) {
+            wgpuCommandEncoderCopyTextureToBuffer(this.pointer(), source.toSegmentAddress(arena),
+                    destination.toSegmentAddress(arena), copySize.toSegmentAddress(arena));
+        }
+    }
+
+    @Override
+    public void copyTextureToTexture(final TexelCopyTextureInfo source, final TexelCopyTextureInfo destination,
+                                     final Extent3D copySize) {
+        try (final var arena = Arena.ofConfined()) {
+            wgpuCommandEncoderCopyTextureToTexture(this.pointer(), source.toSegmentAddress(arena),
+                    destination.toSegmentAddress(arena), copySize.toSegmentAddress(arena));
+        }
+    }
+
+    @Override
+    public void insertDebugMarker(final String markerLabel) {
+        try (final var arena = Arena.ofConfined()) {
+            wgpuCommandEncoderInsertDebugMarker(this.pointer(), StringView.from(markerLabel).toSegment(arena));
+        }
+    }
+
+    @Override
+    public void popDebugGroup() {
+        wgpuCommandEncoderPopDebugGroup(this.pointer());
+    }
+
+    @Override
+    public void pushDebugGroup(final String groupLabel) {
+        try (final var arena = Arena.ofConfined()) {
+            wgpuCommandEncoderPushDebugGroup(this.pointer(), StringView.from(groupLabel).toSegment(arena));
+        }
+    }
+
+    @Override
+    public void resolveQuerySet(final QuerySet querySet, final int firstQuery, final int queryCount,
+                                final Buffer destination,
+                                final long destinationOffset) {
+        wgpuCommandEncoderResolveQuerySet(this.pointer(), querySet.pointer(), firstQuery, queryCount,
+                destination.pointer(), destinationOffset);
+    }
+
+    @Override
+    public void writeTimestamp(final QuerySet querySet, final int queryIndex) {
+        wgpuCommandEncoderWriteTimestamp(this.pointer(), querySet.pointer(), queryIndex);
     }
 
     @Override

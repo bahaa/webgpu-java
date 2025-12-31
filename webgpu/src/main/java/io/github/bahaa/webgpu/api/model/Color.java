@@ -40,4 +40,8 @@ public class Color {
         WGPUColor.b(struct, this.b);
         WGPUColor.a(struct, this.a);
     }
+
+    public MemorySegment toSegmentAddress(final Arena arena) {
+        return MemorySegment.ofAddress(toSegment(arena).address());
+    }
 }

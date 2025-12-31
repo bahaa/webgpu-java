@@ -24,8 +24,6 @@ interface DeviceDescriptorBlueprint extends StructBlueprint {
 
     Optional<DeviceLostCallbackInfoBlueprint> deviceLostCallbackInfo();
 
-    Optional<UncapturedErrorCallbackInfoBlueprint> uncapturedErrorCallbackInfo();
-
     @Override
     default MemorySegment toSegment(final Arena arena) {
         final var struct = WGPUDeviceDescriptor.allocate(arena);
@@ -52,8 +50,5 @@ interface DeviceDescriptorBlueprint extends StructBlueprint {
 
         deviceLostCallbackInfo().ifPresent(deviceLostCallbackInfo ->
                 WGPUDeviceDescriptor.deviceLostCallbackInfo(struct, deviceLostCallbackInfo.toSegment(arena)));
-
-        uncapturedErrorCallbackInfo().ifPresent(uncapturedErrorCallbackInfo ->
-                WGPUDeviceDescriptor.uncapturedErrorCallbackInfo(struct, uncapturedErrorCallbackInfo.toSegment(arena)));
     }
 }
