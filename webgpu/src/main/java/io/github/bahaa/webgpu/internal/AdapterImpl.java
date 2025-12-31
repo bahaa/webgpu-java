@@ -2,10 +2,9 @@ package io.github.bahaa.webgpu.internal;
 
 import io.github.bahaa.webgpu.api.Adapter;
 import io.github.bahaa.webgpu.api.Device;
+import io.github.bahaa.webgpu.api.WebGpuException;
 import io.github.bahaa.webgpu.api.model.*;
-import io.github.bahaa.webgpu.ffm.WGPUAdapterInfo;
-import io.github.bahaa.webgpu.ffm.WGPURequestDeviceCallback;
-import io.github.bahaa.webgpu.ffm.WGPURequestDeviceCallbackInfo;
+import io.github.bahaa.webgpu.ffm.*;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -16,8 +15,20 @@ import static io.github.bahaa.webgpu.ffm.webgpu_h.*;
 
 class AdapterImpl extends NativeObjectImpl implements Adapter {
 
+    private final MemorySegment uncapturedErrorCallbackInfo;
+    private final Arena arena = Arena.ofConfined();
+
     protected AdapterImpl(final MemorySegment pointer) {
         super(pointer);
+
+        final WGPUUncapturedErrorCallback.Function uncapturedErrorCallback =
+                (device, type, message, userdata1, userdata2) -> {
+                    throw new WebGpuException(StringView.from(message).value());
+                };
+        final var uncapturedErrorCallbackStub =
+                WGPUUncapturedErrorCallback.allocate(uncapturedErrorCallback, this.arena);
+        this.uncapturedErrorCallbackInfo = WGPUUncapturedErrorCallbackInfo.allocate(this.arena);
+        WGPUUncapturedErrorCallbackInfo.callback(this.uncapturedErrorCallbackInfo, uncapturedErrorCallbackStub);
     }
 
     public static AdapterImpl from(final MemorySegment pointer) {
@@ -26,13 +37,13 @@ class AdapterImpl extends NativeObjectImpl implements Adapter {
 
     @Override
     protected ObjectCleaner cleaner() {
-        return new Cleaner(this.pointer());
+        return new Cleaner(this.pointer(), this.arena);
     }
 
     @Override
     public CompletableFuture<Device> requestDevice(final DeviceDescriptor descriptor) {
         Objects.requireNonNull(descriptor, "descriptor is null");
-        final var arena = Arena.ofAuto();
+
         final var future = new CompletableFuture<Device>();
 
         final WGPURequestDeviceCallback.Function callback = (status, device, message,
@@ -44,14 +55,19 @@ class AdapterImpl extends NativeObjectImpl implements Adapter {
                         .formatted(status)));
             }
         };
+        try (final var arena = Arena.ofConfined()) {
+            final var callbackStub = WGPURequestDeviceCallback.allocate(callback, arena);
 
-        final var callbackStub = WGPURequestDeviceCallback.allocate(callback, arena);
+            final var callbackInfo = WGPURequestDeviceCallbackInfo.allocate(arena);
+            WGPURequestDeviceCallbackInfo.callback(callbackInfo, callbackStub);
 
-        final var callbackInfo = WGPURequestDeviceCallbackInfo.allocate(arena);
-        WGPURequestDeviceCallbackInfo.callback(callbackInfo, callbackStub);
+            final var struct = descriptor.toSegment(arena);
+            WGPUDeviceDescriptor.uncapturedErrorCallbackInfo(struct, this.uncapturedErrorCallbackInfo);
 
-        var _ = wgpuAdapterRequestDevice(arena, this.pointer(),
-                descriptor.toSegment(arena), callbackInfo);
+            var _ = wgpuAdapterRequestDevice(arena, this.pointer(),
+                    struct, callbackInfo);
+        }
+
 
         return future;
     }
@@ -84,13 +100,17 @@ class AdapterImpl extends NativeObjectImpl implements Adapter {
 
     private static class Cleaner extends ObjectCleaner {
 
-        protected Cleaner(final MemorySegment pointer) {
+        private final Arena arena;
+
+        protected Cleaner(final MemorySegment pointer, final Arena arena) {
             super(pointer);
+            this.arena = arena;
         }
 
         @Override
         protected void clean(final MemorySegment pointer) {
             wgpuAdapterRelease(pointer);
+            this.arena.close();
         }
     }
 }
