@@ -15,11 +15,58 @@
         <wgpu.native.download.base.url>
             https://github.com/gfx-rs/wgpu-native/releases/download/${version.wgpu-native}
         </wgpu.native.download.base.url>
+        <jextract.executable>jextract</jextract.executable>
     </properties>
 
+    <profiles>
+        <profile>
+            <id>linux-x86</id>
+            <properties>
+                <jextract.executable>${project.build.directory}/jextract-25/bin/jextract</jextract.executable>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.github.download-maven-plugin</groupId>
+                        <artifactId>download-maven-plugin</artifactId>
+                        <version>${version.download-maven-plugin}</version>
+                        <configuration>
+                            <unpack>true</unpack>
+                            <failOnError>true</failOnError>
+                            <alwaysVerifyChecksum>true</alwaysVerifyChecksum>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>download-wgpu-headers</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>wget</goal>
+                                </goals>
+                                <configuration>
+                                    <url>
+                                        https://download.java.net/java/early_access/jextract/25/2/openjdk-25-jextract+2-4_linux-x64_bin.tar.gz
+                                    </url>
+                                    <includes>**</includes>
+                                    <outputDirectory>${build.directory}/</outputDirectory>
+                                    <sha256>d0cc481abc1adb16fb9514e1c5e0bfc08d38c29228bece667fb5054ceaffaa42</sha256>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <build>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.7.1</version>
+            </extension>
+        </extensions>
         <plugins>
-            <!-- Download wgpu dll/so/dylib and header files -->
             <plugin>
                 <groupId>io.github.download-maven-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>
@@ -36,6 +83,7 @@
                     </fileMappers>
                 </configuration>
                 <executions>
+                    <!-- Download wgpu dll/so/dylib and header files -->
                     <execution>
                         <id>download-wgpu-headers</id>
                         <phase>generate-sources</phase>
@@ -95,7 +143,7 @@
                 <artifactId>jextract-maven-plugin</artifactId>
                 <version>${version.jextract-maven-plugin}</version>
                 <configuration>
-                    <executable>jextract</executable>
+                    <executable>${jextract.executable}</executable>
                 </configuration>
                 <executions>
                     <execution>
