@@ -32,6 +32,8 @@
         <version.download-maven-plugin>2.0.0</version.download-maven-plugin>
         <version.jextract-maven-plugin>0.4.3</version.jextract-maven-plugin>
         <version.maven-pmd-plugin>3.28.0</version.maven-pmd-plugin>
+
+        <jextract.executable>jextract</jextract.executable>
     </properties>
 
     <dependencyManagement>
@@ -80,5 +82,84 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>linux-x86</id>
+            <properties>
+                <jextract.executable>${project.basedir}/../target/jextract-25/bin/jextract</jextract.executable>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.github.download-maven-plugin</groupId>
+                        <artifactId>download-maven-plugin</artifactId>
+                        <version>${version.download-maven-plugin}</version>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <unpack>true</unpack>
+                            <failOnError>true</failOnError>
+                            <alwaysVerifyChecksum>true</alwaysVerifyChecksum>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>download-wgpu-jextract</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>wget</goal>
+                                </goals>
+                                <configuration>
+                                    <url>
+                                        https://download.java.net/java/early_access/jextract/25/2/openjdk-25-jextract+2-4_linux-x64_bin.tar.gz
+                                    </url>
+                                    <includes>**</includes>
+                                    <outputDirectory>${project.build.directory}/</outputDirectory>
+                                    <sha256>d0cc481abc1adb16fb9514e1c5e0bfc08d38c29228bece667fb5054ceaffaa42</sha256>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>macos-aarch64</id>
+            <properties>
+                <jextract.executable>${project.basedir}/../target/jextract-25/bin/jextract</jextract.executable>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>io.github.download-maven-plugin</groupId>
+                        <artifactId>download-maven-plugin</artifactId>
+                        <version>${version.download-maven-plugin}</version>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <unpack>true</unpack>
+                            <failOnError>true</failOnError>
+                            <alwaysVerifyChecksum>true</alwaysVerifyChecksum>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>download-jextract</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>wget</goal>
+                                </goals>
+                                <configuration>
+                                    <url>
+                                        https://download.java.net/java/early_access/jextract/25/2/openjdk-25-jextract+2-4_macos-aarch64_bin.tar.gz
+                                    </url>
+                                    <includes>**</includes>
+                                    <outputDirectory>${project.build.directory}/</outputDirectory>
+                                    <sha256>3dd1dd1bde059d271739e2cc2290c64f93f85488c86c01e566c0e374eece798f</sha256>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

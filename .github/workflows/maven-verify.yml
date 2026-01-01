@@ -24,7 +24,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  maven_verify:
 
     runs-on: ubuntu-latest
 
