@@ -100,7 +100,7 @@
                 <artifactId>jextract-maven-plugin</artifactId>
                 <version>${version.jextract-maven-plugin}</version>
                 <configuration>
-                    <executable>jextract</executable>
+                    <executable>${jextract.executable}</executable>
                 </configuration>
                 <executions>
                     <execution>
