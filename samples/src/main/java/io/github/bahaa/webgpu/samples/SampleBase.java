@@ -4,6 +4,7 @@ import io.github.bahaa.webgpu.api.*;
 import io.github.bahaa.webgpu.api.model.*;
 import io.github.bahaa.webgpu.samples.platform.macos.appkit.NSWindow;
 import io.github.bahaa.webgpu.samples.platform.macos.ca.CAMetalLayer;
+import io.github.bahaa.webgpu.samples.platform.windwos.Windows;
 import io.github.bahaa.webgpu.tools.LibraryLoader;
 import io.github.bahaa.webgpu.tools.Platform;
 
@@ -17,6 +18,7 @@ import java.util.EnumSet;
 
 import static io.github.bahaa.webgpu.samples.glfw.ffm.glfw3_h.*;
 import static io.github.bahaa.webgpu.samples.glfw.ffm.glfw3native_h.glfwGetCocoaWindow;
+import static io.github.bahaa.webgpu.samples.glfw.ffm.glfw3native_h.glfwGetWin32Window;
 import static java.lang.foreign.MemorySegment.NULL;
 
 public abstract class SampleBase {
@@ -136,7 +138,8 @@ public abstract class SampleBase {
 
     protected Surface createSurface(final MemorySegment window, final Instance instance) {
         return switch (Platform.currentOS()) {
-            case WINDOWS, LINUX -> throw new UnsupportedOperationException("Not supported yet.");
+            case LINUX -> throw new UnsupportedOperationException("Not supported yet.");
+            case WINDOWS -> createWindowsSurface(window, instance);
             case MACOS -> createMetalSurface(window, instance);
             case OTHER -> throw new UnsupportedOperationException("Unknown operating system!");
         };
@@ -181,6 +184,19 @@ public abstract class SampleBase {
         return instance.createSurface(SurfaceDescriptor.builder()
                 .source(SurfaceSource.metalLayer()
                         .layer(layer.id())
+                        .build())
+                .build()
+        );
+    }
+
+    private Surface createWindowsSurface(final MemorySegment window, final Instance instance) {
+        final var hwnd = glfwGetWin32Window(window);
+        final var hinstance = Windows.getModuleHandle(NULL);
+
+        return instance.createSurface(SurfaceDescriptor.builder()
+                .source(SurfaceSource.windowsHWND()
+                        .hwnd(hwnd)
+                        .hinstance(hinstance)
                         .build())
                 .build()
         );

@@ -1,6 +1,6 @@
 package io.github.bahaa.webgpu.samples.platform.macos.runtime;
 
-import io.github.bahaa.webgpu.samples.platfrom.PlatformException;
+import io.github.bahaa.webgpu.samples.platform.PlatformException;
 
 import java.lang.foreign.*;
 import java.lang.invoke.MethodHandle;
@@ -98,14 +98,17 @@ public enum Runtime {
         }
     }
 
-    private static class Meta {
-        private static final String LIB_OBJC = "libobjc.A.dylib";
-
+    private enum Meta {
+        ;
+        static final Arena LIBRARY_ARENA = Arena.ofAuto();
+        private static final String LIB_OBJC = "objc.A";
+        static final SymbolLookup SYMBOL_LOOKUP = SymbolLookup
+                .libraryLookup(System.mapLibraryName(LIB_OBJC), LIBRARY_ARENA)
+                .or(SymbolLookup.loaderLookup())
+                .or(Linker.nativeLinker().defaultLookup());
         private static final MethodHandle objc_getClass;
         private static final MethodHandle sel_registerName;
-
         private static final MethodHandle object_dispose;
-
         private static final MethodHandle objc_msgSend;
         private static final MethodHandle objc_msgSendByte;
         private static final MethodHandle objc_msgSendInt;
@@ -113,62 +116,58 @@ public enum Runtime {
         private static final MethodHandle objc_msgSendFloat;
         private static final MethodHandle objc_msgSendAddr;
         private static final MethodHandle objc_msgSendAddrAddrAddr;
-
         private static final MethodHandle class_createInstance;
 
         static {
-            final var arena = Arena.ofAuto();
-
             final var linker = Linker.nativeLinker();
-            final var objc = SymbolLookup.libraryLookup(LIB_OBJC, arena);
 
-            objc_getClass = linker.downcallHandle(objc.find("objc_getClass").orElseThrow(),
+            objc_getClass = linker.downcallHandle(SYMBOL_LOOKUP.find("objc_getClass").orElseThrow(),
                     FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS));
 
-            sel_registerName = linker.downcallHandle(objc.find("sel_registerName").orElseThrow(),
+            sel_registerName = linker.downcallHandle(SYMBOL_LOOKUP.find("sel_registerName").orElseThrow(),
                     FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS));
 
-            object_dispose = linker.downcallHandle(objc.find("object_dispose").orElseThrow(),
+            object_dispose = linker.downcallHandle(SYMBOL_LOOKUP.find("object_dispose").orElseThrow(),
                     FunctionDescriptor.ofVoid(ValueLayout.ADDRESS));
 
             objc_msgSend = linker.downcallHandle(
-                    objc.find("objc_msgSend").orElseThrow(),
+                    SYMBOL_LOOKUP.find("objc_msgSend").orElseThrow(),
                     FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS),
                     Linker.Option.critical(false));
 
             objc_msgSendByte = linker.downcallHandle(
-                    objc.find("objc_msgSend").orElseThrow(),
+                    SYMBOL_LOOKUP.find("objc_msgSend").orElseThrow(),
                     FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_BYTE),
                     Linker.Option.critical(false));
 
             objc_msgSendInt = linker.downcallHandle(
-                    objc.find("objc_msgSend").orElseThrow(),
+                    SYMBOL_LOOKUP.find("objc_msgSend").orElseThrow(),
                     FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_INT),
                     Linker.Option.critical(false));
 
             objc_msgSendLong = linker.downcallHandle(
-                    objc.find("objc_msgSend").orElseThrow(),
+                    SYMBOL_LOOKUP.find("objc_msgSend").orElseThrow(),
                     FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_LONG),
                     Linker.Option.critical(false));
 
             objc_msgSendFloat = linker.downcallHandle(
-                    objc.find("objc_msgSend").orElseThrow(),
+                    SYMBOL_LOOKUP.find("objc_msgSend").orElseThrow(),
                     FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_FLOAT),
                     Linker.Option.critical(false));
 
             objc_msgSendAddr = linker.downcallHandle(
-                    objc.find("objc_msgSend").orElseThrow(),
+                    SYMBOL_LOOKUP.find("objc_msgSend").orElseThrow(),
                     FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS),
                     Linker.Option.critical(false));
 
             objc_msgSendAddrAddrAddr = linker.downcallHandle(
-                    objc.find("objc_msgSend").orElseThrow(),
+                    SYMBOL_LOOKUP.find("objc_msgSend").orElseThrow(),
                     FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS,
                             ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.ADDRESS),
                     Linker.Option.critical(false));
 
             class_createInstance = linker.downcallHandle(
-                    objc.find("class_createInstance").orElseThrow(),
+                    SYMBOL_LOOKUP.find("class_createInstance").orElseThrow(),
                     FunctionDescriptor.of(ValueLayout.ADDRESS, ValueLayout.ADDRESS, ValueLayout.JAVA_INT),
                     Linker.Option.critical(false));
         }

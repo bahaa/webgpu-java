@@ -1,4 +1,4 @@
-package io.github.bahaa.webgpu.samples.platfrom;
+package io.github.bahaa.webgpu.samples.platform;
 
 public class PlatformException extends RuntimeException {
     public PlatformException(final String message) {

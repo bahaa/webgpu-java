@@ -9,36 +9,6 @@ import java.lang.invoke.MethodHandle;
 public class glfw3native_h extends glfw3_h {
 
     /**
-     * Function descriptor for:
-     * {@snippet lang = c:
-     * int glfwGetCocoaWindow()
-     *}
-     */
-    public static FunctionDescriptor glfwGetCocoaWindow$descriptor() {
-        return glfwGetCocoaWindow.DESC;
-    }
-
-    /**
-     * Downcall method handle for:
-     * {@snippet lang = c:
-     * int glfwGetCocoaWindow()
-     *}
-     */
-    public static MethodHandle glfwGetCocoaWindow$handle() {
-        return glfwGetCocoaWindow.HANDLE;
-    }
-
-    /**
-     * Address for:
-     * {@snippet lang = c:
-     * int glfwGetCocoaWindow()
-     *}
-     */
-    public static MemorySegment glfwGetCocoaWindow$address() {
-        return glfwGetCocoaWindow.ADDR;
-    }
-
-    /**
      * {@snippet lang = c:
      * int glfwGetCocoaWindow()
      *}
@@ -57,12 +27,41 @@ public class glfw3native_h extends glfw3_h {
         }
     }
 
+    /**
+     * {@snippet lang = c:
+     * int glfwGetWin32Window()
+     *}
+     */
+    public static MemorySegment glfwGetWin32Window(final MemorySegment window) {
+        final var mh$ = glfwGetWin32Window.HANDLE;
+        try {
+            if (TRACE_DOWNCALLS) {
+                traceDowncall("glfwGetWin32Window");
+            }
+            return (MemorySegment) mh$.invokeExact(window);
+        } catch (final Error | RuntimeException ex) {
+            throw ex;
+        } catch (final Throwable ex$) {
+            throw new AssertionError("should not reach here", ex$);
+        }
+    }
+
     private enum glfwGetCocoaWindow {
         ;
         public static final FunctionDescriptor DESC = FunctionDescriptor.of(
                 glfw3_h.C_POINTER, glfw3_h.C_POINTER);
 
         public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("glfwGetCocoaWindow");
+
+        public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
+    }
+
+    private enum glfwGetWin32Window {
+        ;
+        public static final FunctionDescriptor DESC = FunctionDescriptor.of(
+                glfw3_h.C_POINTER, glfw3_h.C_POINTER);
+
+        public static final MemorySegment ADDR = SYMBOL_LOOKUP.findOrThrow("glfwGetWin32Window");
 
         public static final MethodHandle HANDLE = Linker.nativeLinker().downcallHandle(ADDR, DESC);
     }
