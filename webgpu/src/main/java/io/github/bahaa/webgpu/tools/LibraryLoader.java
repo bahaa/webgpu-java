@@ -15,14 +15,14 @@ public enum LibraryLoader {
     public static void loadLibrary(final String name) {
         final var path = generateLibraryPath(name);
 
-        LOGGER.log(Level.INFO, "Loading library {0} from classpath...", path);
+        LOGGER.log(Level.DEBUG, "Loading library {0} from classpath...", path);
 
         try (final var is = LibraryLoader.class
                 .getClassLoader()
                 .getResourceAsStream(path.toString())) {
 
             if (is == null) {
-                LOGGER.log(Level.INFO, "Could not find {0} in classpath.", path);
+                LOGGER.log(Level.DEBUG, "Could not find {0} in classpath.", path);
                 // Library not found in the class. We don't want to fail here as the library might exist in the current
                 // directory or system libraries.
                 return;
