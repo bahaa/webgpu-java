@@ -131,3 +131,9 @@ void main() {
 }
 ```
 
+## Lifetime Management
+
+All WebGPU objects implement `AutoCloseable` so you can use them with `try-with-resources` statements. But if you forgot
+to close them, all the objects register a `java.lang.ref.Cleaner`, so when the GC collect the object, the object will
+release the native resource with it.
+
