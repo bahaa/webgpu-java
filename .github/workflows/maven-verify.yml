@@ -44,4 +44,4 @@ jobs:
           sudo apt-get install -y mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev build-essential      
 
       - name: Build with Maven
-        run: mvn -B package --file pom.xml -Plinux-x86
+        run: ./mvnw -B package --file pom.xml -Plinux-x86

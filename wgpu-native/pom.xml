@@ -83,7 +83,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>download-wgpu-linux-x86-64</id>
+                        <id>download-wgpu-linux-amd64</id>
                         <phase>generate-sources</phase>
                         <goals>
                             <goal>wget</goal>
@@ -91,7 +91,7 @@
                         <configuration>
                             <url>${wgpu.native.download.base.url}/wgpu-linux-x86_64-release.zip</url>
                             <includes>lib/libwgpu_native.so</includes>
-                            <outputDirectory>${build.directory}/classes/foreign/linux-x86_64</outputDirectory>
+                            <outputDirectory>${build.directory}/classes/foreign/linux-amd64</outputDirectory>
                             <sha256>271481ef76fbf3ea09631a6079e9493636ecf813cd9c92306c44a1a452991ba1</sha256>
                         </configuration>
                     </execution>
