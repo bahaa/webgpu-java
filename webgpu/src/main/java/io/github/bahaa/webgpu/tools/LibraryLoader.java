@@ -2,6 +2,7 @@ package io.github.bahaa.webgpu.tools;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.lang.System.Logger.Level;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -9,13 +10,19 @@ import java.nio.file.StandardCopyOption;
 public enum LibraryLoader {
     ;
 
+    private static final System.Logger LOGGER = System.getLogger(LibraryLoader.class.getName());
+
     public static void loadLibrary(final String name) {
         final var path = generateLibraryPath(name);
+
+        LOGGER.log(Level.INFO, "Loading library {0} from classpath...", path);
+
         try (final var is = LibraryLoader.class
                 .getClassLoader()
                 .getResourceAsStream(path.toString())) {
 
             if (is == null) {
+                LOGGER.log(Level.INFO, "Could not find {0} in classpath.", path);
                 // Library not found in the class. We don't want to fail here as the library might exist in the current
                 // directory or system libraries.
                 return;
