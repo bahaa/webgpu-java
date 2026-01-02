@@ -1,5 +1,6 @@
 package io.github.bahaa.webgpu.api.model;
 
+import io.github.bahaa.webgpu.ffm.WGPULimits;
 import io.helidon.builder.api.Prototype;
 
 import java.lang.foreign.Arena;
@@ -72,13 +73,39 @@ interface GPULimitsBlueprint extends StructBlueprint {
 
     @Override
     default MemorySegment toSegment(final Arena arena) {
-        // TODO
-        throw new UnsupportedOperationException();
+        final var struct = WGPULimits.allocate(arena);
+        updateSegment(arena, struct);
+        return struct;
     }
 
     @Override
     default void updateSegment(final Arena arena, final MemorySegment struct) {
-        // TODO
-        throw new UnsupportedOperationException();
+        WGPULimits.maxTextureDimension1D(struct, maxTextureDimension1D());
+        WGPULimits.maxTextureDimension2D(struct, maxTextureDimension2D());
+        WGPULimits.maxTextureDimension3D(struct, maxTextureDimension3D());
+        WGPULimits.maxTextureArrayLayers(struct, maxTextureArrayLayers());
+        WGPULimits.maxBindGroups(struct, maxBindGroups());
+        WGPULimits.maxBindGroupsPlusVertexBuffers(struct, maxBindGroupsPlusVertexBuffers());
+        WGPULimits.maxBindingsPerBindGroup(struct, maxBindingsPerBindGroup());
+        WGPULimits.maxDynamicUniformBuffersPerPipelineLayout(struct, maxDynamicUniformBuffersPerPipelineLayout());
+        WGPULimits.maxDynamicStorageBuffersPerPipelineLayout(struct, maxDynamicStorageBuffersPerPipelineLayout());
+        WGPULimits.maxSampledTexturesPerShaderStage(struct, maxSampledTexturesPerShaderStage());
+        WGPULimits.maxSamplersPerShaderStage(struct, maxSamplersPerShaderStage());
+        WGPULimits.maxStorageBuffersPerShaderStage(struct, maxStorageBuffersPerShaderStage());
+        WGPULimits.maxStorageTexturesPerShaderStage(struct, maxStorageTexturesPerShaderStage());
+        WGPULimits.maxVertexAttributes(struct, maxVertexAttributes());
+        WGPULimits.maxVertexBuffers(struct, maxVertexBuffers());
+        WGPULimits.maxBufferSize(struct, maxBufferSize());
+        WGPULimits.maxVertexAttributes(struct, maxVertexAttributes());
+        WGPULimits.maxVertexBufferArrayStride(struct, maxVertexBufferArrayStride());
+        WGPULimits.maxInterStageShaderVariables(struct, maxInterStageShaderVariables());
+        WGPULimits.maxColorAttachments(struct, maxColorAttachments());
+        WGPULimits.maxColorAttachmentBytesPerSample(struct, maxColorAttachmentBytesPerSample());
+        WGPULimits.maxComputeWorkgroupStorageSize(struct, maxComputeWorkgroupStorageSize());
+        WGPULimits.maxComputeInvocationsPerWorkgroup(struct, maxComputeInvocationsPerWorkgroup());
+        WGPULimits.maxComputeWorkgroupSizeX(struct, maxComputeWorkgroupSizeX());
+        WGPULimits.maxComputeWorkgroupSizeY(struct, maxComputeWorkgroupSizeY());
+        WGPULimits.maxComputeWorkgroupSizeZ(struct, maxComputeWorkgroupSizeZ());
+        WGPULimits.maxComputeWorkgroupsPerDimension(struct, maxComputeWorkgroupsPerDimension());
     }
 }

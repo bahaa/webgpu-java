@@ -59,9 +59,20 @@ class RenderPassEncoderImpl extends ObjectBaseImpl implements RenderPassEncoder 
     }
 
     @Override
-    public synchronized void setBindGroup(final int groupIndex, final BindGroup bindGroup) {
-        // TODO
-        wgpuRenderPassEncoderSetBindGroup(pointer(), groupIndex, bindGroup.pointer(), 0, MemorySegment.NULL);
+    public synchronized void setBindGroup(final int groupIndex, final BindGroup bindGroup, final int[] dynamicOffsets) {
+        if (dynamicOffsets != null) {
+            try (final var arena = Arena.ofConfined()) {
+                final var segment = MemorySegment.ofArray(dynamicOffsets);
+                final var nativeSegment = arena.allocate(segment.byteSize());
+                nativeSegment.copyFrom(segment);
+
+                wgpuRenderPassEncoderSetBindGroup(pointer(), groupIndex, bindGroup.pointer(), dynamicOffsets.length,
+                        nativeSegment);
+            }
+        } else {
+            wgpuRenderPassEncoderSetBindGroup(pointer(), groupIndex, bindGroup.pointer(), 0,
+                    MemorySegment.NULL);
+        }
     }
 
     @Override

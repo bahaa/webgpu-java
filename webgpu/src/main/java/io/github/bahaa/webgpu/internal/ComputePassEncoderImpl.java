@@ -31,12 +31,6 @@ class ComputePassEncoderImpl extends ObjectBaseImpl implements ComputePassEncode
     }
 
     @Override
-    public void setBindGroup(final int groupIndex, final BindGroup bindGroup) {
-        // TODO
-        wgpuComputePassEncoderSetBindGroup(pointer(), groupIndex, bindGroup.pointer(), 0, MemorySegment.NULL);
-    }
-
-    @Override
     public void insertDebugMarker(final String markerLabel) {
         try (final var arena = Arena.ofConfined()) {
             wgpuComputePassEncoderInsertDebugMarker(this.pointer(), StringView.from(markerLabel).toSegment(arena));
@@ -68,6 +62,23 @@ class ComputePassEncoderImpl extends ObjectBaseImpl implements ComputePassEncode
     @Override
     public void end() {
         wgpuComputePassEncoderEnd(this.pointer());
+    }
+
+    @Override
+    public synchronized void setBindGroup(final int groupIndex, final BindGroup bindGroup, final int[] dynamicOffsets) {
+        if (dynamicOffsets != null) {
+            try (final var arena = Arena.ofConfined()) {
+                final var segment = MemorySegment.ofArray(dynamicOffsets);
+                final var nativeSegment = arena.allocate(segment.byteSize());
+                nativeSegment.copyFrom(segment);
+
+                wgpuComputePassEncoderSetBindGroup(pointer(), groupIndex, bindGroup.pointer(), dynamicOffsets.length,
+                        nativeSegment);
+            }
+        } else {
+            wgpuComputePassEncoderSetBindGroup(pointer(), groupIndex, bindGroup.pointer(), 0,
+                    MemorySegment.NULL);
+        }
     }
 
     @Override
