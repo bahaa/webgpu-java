@@ -44,6 +44,7 @@ jobs:
           sudo apt-get install -y mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev build-essential      
 
       - name: Build with Maven
-        run: ./mvnw -B package --file pom.xml -Plinux-x86 \
-          -Dtest=!io.github.bahaa.webgpu.integration.* \
-          -Dsurefire.failIfNoSpecifiedTests=false
+        run: |
+          ./mvnw -B package --file pom.xml -Plinux-x86 \
+            -Dsurefire.failIfNoSpecifiedTests=false \
+            -Dtest=!io.github.bahaa.webgpu.integration.*
