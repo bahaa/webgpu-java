@@ -29,50 +29,53 @@ class RenderPassEncoderImpl extends ObjectBaseImpl implements RenderPassEncoder 
     }
 
     @Override
-    public void setPipeline(final RenderPipeline pipeline) {
+    public synchronized void setPipeline(final RenderPipeline pipeline) {
         wgpuRenderPassEncoderSetPipeline(pointer(), pipeline.pointer());
     }
 
     @Override
-    public void draw(final int vertexCount, final int instanceCount, final int firstVertex, final int firstInstance) {
+    public synchronized void draw(final int vertexCount, final int instanceCount, final int firstVertex,
+                                  final int firstInstance) {
         wgpuRenderPassEncoderDraw(pointer(), vertexCount, instanceCount, firstVertex, firstInstance);
     }
 
     @Override
-    public void drawIndexed(final int indexCount, final int instanceCount, final int firstIndex, final int baseVertex,
-                            final int firstInstance) {
+    public synchronized void drawIndexed(final int indexCount, final int instanceCount, final int firstIndex,
+                                         final int baseVertex,
+                                         final int firstInstance) {
         wgpuRenderPassEncoderDrawIndexed(pointer(), indexCount, instanceCount, firstIndex, baseVertex, firstInstance);
     }
 
     @Override
-    public void drawIndexedIndirect(final Buffer indirectBuffer, final int indirectOffset) {
+    public synchronized void drawIndexedIndirect(final Buffer indirectBuffer, final int indirectOffset) {
         wgpuRenderPassEncoderDrawIndirect(this.pointer(), indirectBuffer.pointer(), indirectOffset);
     }
 
     @Override
-    public void setVertexBuffer(final int slot, @Nullable final Buffer buffer, final long offset, final long size) {
+    public synchronized void setVertexBuffer(final int slot, @Nullable final Buffer buffer, final long offset,
+                                             final long size) {
         wgpuRenderPassEncoderSetVertexBuffer(pointer(), slot,
                 buffer == null ? MemorySegment.NULL : buffer.pointer(), offset, size);
     }
 
     @Override
-    public void setBindGroup(final int groupIndex, final BindGroup bindGroup) {
+    public synchronized void setBindGroup(final int groupIndex, final BindGroup bindGroup) {
         // TODO
         wgpuRenderPassEncoderSetBindGroup(pointer(), groupIndex, bindGroup.pointer(), 0, MemorySegment.NULL);
     }
 
     @Override
-    public void beginOcclusionQuery(final int queryIndex) {
+    public synchronized void beginOcclusionQuery(final int queryIndex) {
         wgpuRenderPassEncoderBeginOcclusionQuery(pointer(), queryIndex);
     }
 
     @Override
-    public void endOcclusionQuery() {
+    public synchronized void endOcclusionQuery() {
         wgpuRenderPassEncoderEndOcclusionQuery(pointer());
     }
 
     @Override
-    public void executeBundles(final List<RenderBundle> bundles) {
+    public synchronized void executeBundles(final List<RenderBundle> bundles) {
         try (final var arena = Arena.ofConfined()) {
             final var struct = arena.allocate(ValueLayout.ADDRESS, bundles.size());
             for (var i = 0; i < bundles.size(); i++) {
@@ -84,54 +87,55 @@ class RenderPassEncoderImpl extends ObjectBaseImpl implements RenderPassEncoder 
     }
 
     @Override
-    public void end() {
+    public synchronized void end() {
         wgpuRenderPassEncoderEnd(this.pointer());
     }
 
     @Override
-    public void insertDebugMarker(final String markerLabel) {
+    public synchronized void insertDebugMarker(final String markerLabel) {
         try (final var arena = Arena.ofConfined()) {
             wgpuRenderPassEncoderInsertDebugMarker(this.pointer(), StringView.from(markerLabel).toSegment(arena));
         }
     }
 
     @Override
-    public void popDebugGroup() {
+    public synchronized void popDebugGroup() {
         wgpuRenderPassEncoderPopDebugGroup(this.pointer());
     }
 
     @Override
-    public void pushDebugGroup(final String groupLabel) {
+    public synchronized void pushDebugGroup(final String groupLabel) {
         try (final var arena = Arena.ofConfined()) {
             wgpuRenderPassEncoderPushDebugGroup(this.pointer(), StringView.from(groupLabel).toSegment(arena));
         }
     }
 
     @Override
-    public void setBlendConstant(final Color color) {
+    public synchronized void setBlendConstant(final Color color) {
         try (final var arena = Arena.ofConfined()) {
             wgpuRenderPassEncoderSetBlendConstant(this.pointer(), color.toSegmentAddress(arena));
         }
     }
 
     @Override
-    public void setIndexBuffer(final Buffer buffer, final IndexFormat format, final long offset, final long size) {
+    public synchronized void setIndexBuffer(final Buffer buffer, final IndexFormat format, final long offset,
+                                            final long size) {
         wgpuRenderPassEncoderSetIndexBuffer(this.pointer(), buffer.pointer(), format.value(), offset, size);
     }
 
     @Override
-    public void setScissorRect(final int x, final int y, final int width, final int height) {
+    public synchronized void setScissorRect(final int x, final int y, final int width, final int height) {
         wgpuRenderPassEncoderSetScissorRect(this.pointer(), x, y, width, height);
     }
 
     @Override
-    public void setStencilReference(final int reference) {
+    public synchronized void setStencilReference(final int reference) {
         wgpuRenderPassEncoderSetStencilReference(this.pointer(), reference);
     }
 
     @Override
-    public void setViewport(final float x, final float y, final float width, final float height,
-                            final float minDepth, final float maxDepth) {
+    public synchronized void setViewport(final float x, final float y, final float width, final float height,
+                                         final float minDepth, final float maxDepth) {
         wgpuRenderPassEncoderSetViewport(this.pointer(), x, y, width, height, minDepth, maxDepth);
     }
 

@@ -49,4 +49,6 @@ public interface Instance extends NativeObject {
      * @return
      */
     Surface createSurface(final SurfaceDescriptor surfaceDescriptor);
+
+    void processEvents();
 }

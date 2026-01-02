@@ -24,7 +24,7 @@ class CommandEncoderImpl extends ObjectBaseImpl implements CommandEncoder {
     }
 
     @Override
-    public RenderPassEncoder beginRenderPass(final RenderPassDescriptor descriptor) {
+    public synchronized RenderPassEncoder beginRenderPass(final RenderPassDescriptor descriptor) {
         try (final var arena = Arena.ofConfined()) {
             final var pass = wgpuCommandEncoderBeginRenderPass(this.pointer(), descriptor == null ?
                     MemorySegment.NULL : descriptor.toSegment(arena));
@@ -34,7 +34,7 @@ class CommandEncoderImpl extends ObjectBaseImpl implements CommandEncoder {
     }
 
     @Override
-    public ComputePassEncoder beginComputePass(final ComputePassDescriptor descriptor) {
+    public synchronized ComputePassEncoder beginComputePass(final ComputePassDescriptor descriptor) {
         try (final var arena = Arena.ofConfined()) {
             final var pass = wgpuCommandEncoderBeginComputePass(this.pointer(), descriptor == null ?
                     MemorySegment.NULL : descriptor.toSegment(arena));
@@ -54,22 +54,23 @@ class CommandEncoderImpl extends ObjectBaseImpl implements CommandEncoder {
     }
 
     @Override
-    public void clearBuffer(final Buffer buffer, final long offset, final long size) {
+    public synchronized void clearBuffer(final Buffer buffer, final long offset, final long size) {
         wgpuCommandEncoderClearBuffer(pointer(), buffer.pointer(), offset, size);
     }
 
     @Override
-    public void copyBufferToBuffer(final Buffer source, final long sourceOffset, final Buffer destination,
-                                   final long destinationOffset,
-                                   final long size) {
+    public synchronized void copyBufferToBuffer(final Buffer source, final long sourceOffset, final Buffer destination,
+                                                final long destinationOffset,
+                                                final long size) {
         wgpuCommandEncoderCopyBufferToBuffer(this.pointer(),
                 source.pointer(), sourceOffset, destination.pointer(), destinationOffset, size);
 
     }
 
     @Override
-    public void copyBufferToTexture(final TexelCopyBufferInfo source, final TexelCopyTextureInfo destination,
-                                    final Extent3D copySize) {
+    public synchronized void copyBufferToTexture(final TexelCopyBufferInfo source,
+                                                 final TexelCopyTextureInfo destination,
+                                                 final Extent3D copySize) {
         try (final var arena = Arena.ofConfined()) {
             wgpuCommandEncoderCopyBufferToTexture(this.pointer(), source.toSegmentAddress(arena),
                     destination.toSegmentAddress(arena), copySize.toSegmentAddress(arena));
@@ -77,8 +78,9 @@ class CommandEncoderImpl extends ObjectBaseImpl implements CommandEncoder {
     }
 
     @Override
-    public void copyTextureToBuffer(final TexelCopyTextureInfo source, final TexelCopyBufferInfo destination,
-                                    final Extent3D copySize) {
+    public synchronized void copyTextureToBuffer(final TexelCopyTextureInfo source,
+                                                 final TexelCopyBufferInfo destination,
+                                                 final Extent3D copySize) {
         try (final var arena = Arena.ofConfined()) {
             wgpuCommandEncoderCopyTextureToBuffer(this.pointer(), source.toSegmentAddress(arena),
                     destination.toSegmentAddress(arena), copySize.toSegmentAddress(arena));
@@ -86,8 +88,9 @@ class CommandEncoderImpl extends ObjectBaseImpl implements CommandEncoder {
     }
 
     @Override
-    public void copyTextureToTexture(final TexelCopyTextureInfo source, final TexelCopyTextureInfo destination,
-                                     final Extent3D copySize) {
+    public synchronized void copyTextureToTexture(final TexelCopyTextureInfo source,
+                                                  final TexelCopyTextureInfo destination,
+                                                  final Extent3D copySize) {
         try (final var arena = Arena.ofConfined()) {
             wgpuCommandEncoderCopyTextureToTexture(this.pointer(), source.toSegmentAddress(arena),
                     destination.toSegmentAddress(arena), copySize.toSegmentAddress(arena));
@@ -95,34 +98,34 @@ class CommandEncoderImpl extends ObjectBaseImpl implements CommandEncoder {
     }
 
     @Override
-    public void insertDebugMarker(final String markerLabel) {
+    public synchronized void insertDebugMarker(final String markerLabel) {
         try (final var arena = Arena.ofConfined()) {
             wgpuCommandEncoderInsertDebugMarker(this.pointer(), StringView.from(markerLabel).toSegment(arena));
         }
     }
 
     @Override
-    public void popDebugGroup() {
+    public synchronized void popDebugGroup() {
         wgpuCommandEncoderPopDebugGroup(this.pointer());
     }
 
     @Override
-    public void pushDebugGroup(final String groupLabel) {
+    public synchronized void pushDebugGroup(final String groupLabel) {
         try (final var arena = Arena.ofConfined()) {
             wgpuCommandEncoderPushDebugGroup(this.pointer(), StringView.from(groupLabel).toSegment(arena));
         }
     }
 
     @Override
-    public void resolveQuerySet(final QuerySet querySet, final int firstQuery, final int queryCount,
-                                final Buffer destination,
-                                final long destinationOffset) {
+    public synchronized void resolveQuerySet(final QuerySet querySet, final int firstQuery, final int queryCount,
+                                             final Buffer destination,
+                                             final long destinationOffset) {
         wgpuCommandEncoderResolveQuerySet(this.pointer(), querySet.pointer(), firstQuery, queryCount,
                 destination.pointer(), destinationOffset);
     }
 
     @Override
-    public void writeTimestamp(final QuerySet querySet, final int queryIndex) {
+    public synchronized void writeTimestamp(final QuerySet querySet, final int queryIndex) {
         wgpuCommandEncoderWriteTimestamp(this.pointer(), querySet.pointer(), queryIndex);
     }
 

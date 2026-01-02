@@ -69,6 +69,11 @@ public class InstanceImpl extends NativeObjectImpl implements Instance {
         }
     }
 
+    @Override
+    public void processEvents() {
+        wgpuInstanceProcessEvents(this.pointer());
+    }
+
     private static class Cleaner extends ObjectCleaner {
 
         protected Cleaner(final MemorySegment pointer) {
