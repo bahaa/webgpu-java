@@ -27,6 +27,7 @@
         <version.junit>6.0.1</version.junit>
         <version.assertj>3.27.6</version.assertj>
         <version.archunit>1.4.1</version.archunit>
+        <version.image-comparison>4.4.0</version.image-comparison>
 
         <!-- Maven Plugins -->
         <version.download-maven-plugin>2.0.0</version.download-maven-plugin>

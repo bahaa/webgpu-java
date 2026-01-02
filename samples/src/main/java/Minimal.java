@@ -68,7 +68,7 @@ void main() {
                         .storeOp(StoreOp.STORE)
                         .clearValue(Color.rgba(0, 0, 0, 1f))) // black
                 .build());
-        
+
         pass.setPipeline(renderPipeline);
         pass.draw(3, 1, 0, 0);
         pass.end();
@@ -102,7 +102,7 @@ void main() {
         final var image = Images.bufferedImageFromRGBA8Data(width, height, bytes);
         outputBuffer.unmap();
 
-        try (final var os = Files.newOutputStream(Path.of("./target/triablge.png"))) {
+        try (final var os = Files.newOutputStream(Path.of("./target/triangle.png"))) {
             ImageIO.write(image, "png", os);
         } catch (final IOException e) {
             throw new UncheckedIOException(e);
