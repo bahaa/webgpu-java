@@ -47,4 +47,4 @@ jobs:
         run: |
           ./mvnw -B package --file pom.xml -Plinux-x86 \
             -Dsurefire.failIfNoSpecifiedTests=false \
-            -Dtest=!io.github.bahaa.webgpu.integration.*
+            -Dtest='!io.github.bahaa.webgpu.integration.*'
