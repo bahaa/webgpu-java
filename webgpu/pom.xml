@@ -15,8 +15,13 @@
     <dependencies>
         <dependency>
             <groupId>io.github.bahaa.webgpu</groupId>
-            <artifactId>wgpu-native</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <artifactId>wgpu-native-ffm</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bahaa.webgpu</groupId>
+            <artifactId>wgpu-native-all</artifactId>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>

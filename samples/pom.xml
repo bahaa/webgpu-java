@@ -63,7 +63,7 @@
                         <configuration>
                             <url>${glfw.download.base.url}/glfw-${version.glfw}.bin.MACOS.zip</url>
                             <includes>*/include/**</includes>
-                            <outputDirectory>${build.directory}/</outputDirectory>
+                            <outputDirectory>${project.build.directory}/</outputDirectory>
                             <md5>c0ef59e23631c341e25f2729fd07cac7</md5>
                         </configuration>
                     </execution>
@@ -76,7 +76,7 @@
                         <configuration>
                             <url>${glfw.download.base.url}/glfw-${version.glfw}.bin.MACOS.zip</url>
                             <includes>*/lib-arm64/*.dylib</includes>
-                            <outputDirectory>${build.directory}/classes/foreign/macos-aarch64</outputDirectory>
+                            <outputDirectory>${project.build.directory}/classes/foreign/macos-aarch64</outputDirectory>
                             <md5>c0ef59e23631c341e25f2729fd07cac7</md5>
                         </configuration>
                     </execution>
@@ -89,7 +89,7 @@
                         <configuration>
                             <url>${glfw.download.base.url}/glfw-${version.glfw}.bin.WIN64.zip</url>
                             <includes>*/lib-vc2022/*.dll</includes>
-                            <outputDirectory>${build.directory}/classes/foreign/windows-x86_64</outputDirectory>
+                            <outputDirectory>${project.build.directory}/classes/foreign/windows-x86_64</outputDirectory>
                             <md5>725c211378d00f3eee5df5acc8108742</md5>
                         </configuration>
                     </execution>

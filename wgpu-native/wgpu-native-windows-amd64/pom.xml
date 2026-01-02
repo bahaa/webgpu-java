@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>io.github.bahaa.webgpu</groupId>
+        <artifactId>wgpu-native</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>wgpu-native-windows-amd64</artifactId>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.github.download-maven-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
+                <version>${version.download-maven-plugin}</version>
+                <configuration>
+                    <unpack>true</unpack>
+                    <failOnError>true</failOnError>
+                    <alwaysVerifyChecksum>true</alwaysVerifyChecksum>
+                    <fileMappers>
+                        <org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                            <pattern>^\Qlib/\E</pattern>
+                            <replacement>./</replacement>
+                        </org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                    </fileMappers>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>download-wgpu-windows-amd64</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                        <configuration>
+                            <url>${wgpu.native.download.base.url}/wgpu-windows-x86_64-msvc-release.zip</url>
+                            <includes>lib/wgpu_native.dll</includes>
+                            <outputDirectory>${project.build.directory}/classes/foreign/windows-amd64</outputDirectory>
+                            <sha256>f14ca334b4d253881bde2605bd147f332178d705f56fbd74f81458797c77fce1</sha256>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
