@@ -15,11 +15,14 @@ import static io.github.bahaa.webgpu.ffm.webgpu_h.*;
 
 class AdapterImpl extends NativeObjectImpl implements Adapter {
 
+    private final InstanceImpl instance;
+
     private final MemorySegment uncapturedErrorCallbackInfo;
     private final Arena arena = Arena.ofConfined();
 
-    protected AdapterImpl(final MemorySegment pointer) {
+    protected AdapterImpl(final MemorySegment pointer, final InstanceImpl instance) {
         super(pointer);
+        this.instance = instance;
 
         final WGPUUncapturedErrorCallback.Function uncapturedErrorCallback =
                 (device, type, message, userdata1, userdata2) -> {
@@ -31,8 +34,8 @@ class AdapterImpl extends NativeObjectImpl implements Adapter {
         WGPUUncapturedErrorCallbackInfo.callback(this.uncapturedErrorCallbackInfo, uncapturedErrorCallbackStub);
     }
 
-    public static AdapterImpl from(final MemorySegment pointer) {
-        return new AdapterImpl(pointer);
+    public static AdapterImpl from(final MemorySegment pointer, final InstanceImpl instance) {
+        return new AdapterImpl(pointer, instance);
     }
 
     @Override
@@ -49,7 +52,7 @@ class AdapterImpl extends NativeObjectImpl implements Adapter {
         final WGPURequestDeviceCallback.Function callback = (status, device, message,
                                                              userdata1, userdata2) -> {
             if (status == WGPURequestDeviceStatus_Success()) {
-                future.complete(DeviceImpl.from(device));
+                future.complete(DeviceImpl.from(device, this));
             } else {
                 future.completeExceptionally(new RuntimeException("WGPURequestDeviceStatus: %d"
                         .formatted(status)));
@@ -96,6 +99,10 @@ class AdapterImpl extends NativeObjectImpl implements Adapter {
     public boolean hasFeature(final FeatureName feature) {
         Objects.requireNonNull(feature, "feature is null");
         return wgpuAdapterHasFeature(pointer(), feature.value()) > 0;
+    }
+
+    InstanceImpl instance() {
+        return this.instance;
     }
 
     private static class Cleaner extends ObjectCleaner {

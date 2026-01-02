@@ -10,12 +10,15 @@ import java.lang.foreign.MemorySegment;
 import static io.github.bahaa.webgpu.ffm.webgpu_h.*;
 
 class DeviceImpl extends ObjectBaseImpl implements Device {
-    protected DeviceImpl(final MemorySegment pointer) {
+    private final AdapterImpl adapter;
+
+    protected DeviceImpl(final MemorySegment pointer, final AdapterImpl adapter) {
         super(pointer);
+        this.adapter = adapter;
     }
 
-    public static DeviceImpl from(final MemorySegment pointer) {
-        return new DeviceImpl(pointer);
+    public static DeviceImpl from(final MemorySegment pointer, final AdapterImpl adapter) {
+        return new DeviceImpl(pointer, adapter);
     }
 
     @Override
@@ -133,6 +136,10 @@ class DeviceImpl extends ObjectBaseImpl implements Device {
         try (final var arena = Arena.ofConfined()) {
             wgpuDeviceSetLabel(pointer(), StringView.from(label).toSegment(arena));
         }
+    }
+
+    AdapterImpl adapter() {
+        return this.adapter;
     }
 
     boolean poll(final boolean wait) {

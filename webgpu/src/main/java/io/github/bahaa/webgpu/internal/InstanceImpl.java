@@ -13,10 +13,14 @@ import io.github.bahaa.webgpu.ffm.WGPURequestAdapterCallbackInfo;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import static io.github.bahaa.webgpu.ffm.webgpu_h.*;
 
 public class InstanceImpl extends NativeObjectImpl implements Instance {
+
+    private final Executor executor = Executors.newSingleThreadExecutor();
 
     private InstanceImpl(final MemorySegment pointer) {
         super(pointer);
@@ -45,7 +49,7 @@ public class InstanceImpl extends NativeObjectImpl implements Instance {
         final WGPURequestAdapterCallback.Function callback = (status, adapter, message,
                                                               userdata1, userdata2) -> {
             if (status == WGPURequestAdapterStatus_Success()) {
-                future.complete(AdapterImpl.from(adapter));
+                future.complete(AdapterImpl.from(adapter, this));
             } else {
                 future.completeExceptionally(new WebGpuException("WGPURequestAdapterStatus: %d"
                         .formatted(status)));
@@ -72,6 +76,12 @@ public class InstanceImpl extends NativeObjectImpl implements Instance {
     @Override
     public void processEvents() {
         wgpuInstanceProcessEvents(this.pointer());
+    }
+
+    void scheduleFuturePoller() {
+        this.executor.execute(() -> {
+            wgpuInstanceWaitAny(this.pointer(), 0, MemorySegment.NULL, Long.MAX_VALUE);
+        });
     }
 
     private static class Cleaner extends ObjectCleaner {

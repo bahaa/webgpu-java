@@ -67,6 +67,7 @@ class BufferImpl extends ObjectBaseImpl implements Buffer {
 
             var _ = wgpuBufferMapAsync(arena, this.pointer(), modeFlags, offset, size, info);
 
+            // FIXME: this makes this method sync. Until `wgpuInstanceWaitAny` is implemented.
             this.device.poll(true);
         }
 
@@ -83,6 +84,10 @@ class BufferImpl extends ObjectBaseImpl implements Buffer {
         try (final var arena = Arena.ofConfined()) {
             wgpuBufferSetLabel(pointer(), StringView.from(label).toSegment(arena));
         }
+    }
+
+    DeviceImpl device() {
+        return this.device;
     }
 
     private static class Cleaner extends ObjectCleaner {
