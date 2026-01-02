@@ -7,7 +7,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
-public interface RenderPassEncoder extends ObjectBase {
+public interface RenderPassEncoder extends PassEncoder {
 
     void setPipeline(final RenderPipeline pipeline);
 
@@ -27,21 +27,11 @@ public interface RenderPassEncoder extends ObjectBase {
         setVertexBuffer(slot, buffer, 0, buffer.size());
     }
 
-    void setBindGroup(final int groupIndex, final BindGroup bindGroup);
-
     void beginOcclusionQuery(int queryIndex);
 
     void endOcclusionQuery();
 
     void executeBundles(List<RenderBundle> bundles);
-
-    void end();
-
-    void insertDebugMarker(String markerLabel);
-
-    void popDebugGroup();
-
-    void pushDebugGroup(String groupLabel);
 
     void setBlendConstant(Color color);
 

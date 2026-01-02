@@ -1,5 +1,9 @@
 package io.github.bahaa.webgpu.api.model;
 
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.stream.Collectors;
+
 public enum BufferUsage {
     NONE(0X0000000000000000),
     MAP_READ(0X0000000000000001),
@@ -18,6 +22,12 @@ public enum BufferUsage {
 
     BufferUsage(final long value) {
         this.value = value;
+    }
+
+    public static EnumSet<BufferUsage> fromMask(final long mask) {
+        return Arrays.stream(values())
+                .filter(it -> (it.value() & mask) != 0)
+                .collect(Collectors.toCollection(() -> EnumSet.noneOf(BufferUsage.class)));
     }
 
     public long value() {

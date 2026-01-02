@@ -2,6 +2,8 @@ package io.github.bahaa.webgpu.internal;
 
 import io.github.bahaa.webgpu.api.Buffer;
 import io.github.bahaa.webgpu.api.WebGpuException;
+import io.github.bahaa.webgpu.api.model.BufferMapState;
+import io.github.bahaa.webgpu.api.model.BufferUsage;
 import io.github.bahaa.webgpu.api.model.MapMode;
 import io.github.bahaa.webgpu.api.model.StringView;
 import io.github.bahaa.webgpu.ffm.WGPUBufferMapCallback;
@@ -38,8 +40,24 @@ class BufferImpl extends ObjectBaseImpl implements Buffer {
     }
 
     @Override
+    public BufferMapState mapState() {
+        return BufferMapState.valueOf(wgpuBufferGetMapState(pointer()));
+    }
+
+    @Override
+    public EnumSet<BufferUsage> usage() {
+        return BufferUsage.fromMask(wgpuBufferGetUsage(pointer()));
+    }
+
+    @Override
     public MemorySegment getMappedRange(final long offset, final long size) {
         final var buf = wgpuBufferGetMappedRange(this.pointer(), offset, size);
+        return buf.asSlice(0, size);
+    }
+
+    @Override
+    public MemorySegment getConstMappedRange(final long offset, final long size) {
+        final var buf = wgpuBufferGetConstMappedRange(this.pointer(), offset, size);
         return buf.asSlice(0, size);
     }
 

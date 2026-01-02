@@ -1,6 +1,7 @@
 package io.github.bahaa.webgpu.internal;
 
 import io.github.bahaa.webgpu.api.BindGroup;
+import io.github.bahaa.webgpu.api.Buffer;
 import io.github.bahaa.webgpu.api.ComputePassEncoder;
 import io.github.bahaa.webgpu.api.ComputePipeline;
 import io.github.bahaa.webgpu.api.model.StringView;
@@ -36,8 +37,32 @@ class ComputePassEncoderImpl extends ObjectBaseImpl implements ComputePassEncode
     }
 
     @Override
+    public void insertDebugMarker(final String markerLabel) {
+        try (final var arena = Arena.ofConfined()) {
+            wgpuComputePassEncoderInsertDebugMarker(this.pointer(), StringView.from(markerLabel).toSegment(arena));
+        }
+    }
+
+    @Override
+    public void popDebugGroup() {
+        wgpuComputePassEncoderPopDebugGroup(this.pointer());
+    }
+
+    @Override
+    public void pushDebugGroup(final String groupLabel) {
+        try (final var arena = Arena.ofConfined()) {
+            wgpuComputePassEncoderPushDebugGroup(this.pointer(), StringView.from(groupLabel).toSegment(arena));
+        }
+    }
+
+    @Override
     public void dispatchWorkgroups(final int workgroupCountX, final int workgroupCountY, final int workgroupCountZ) {
         wgpuComputePassEncoderDispatchWorkgroups(pointer(), workgroupCountX, workgroupCountY, workgroupCountZ);
+    }
+
+    @Override
+    public void dispatchWorkgroupsIndirect(final Buffer indirectBuffer, final long indirectOffset) {
+        wgpuComputePassEncoderDispatchWorkgroupsIndirect(pointer(), indirectBuffer.pointer(), indirectOffset);
     }
 
     @Override
