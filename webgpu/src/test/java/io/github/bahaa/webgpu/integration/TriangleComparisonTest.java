@@ -6,6 +6,7 @@ import io.github.bahaa.webgpu.api.Instance;
 import io.github.bahaa.webgpu.api.model.*;
 import io.github.bahaa.webgpu.tools.Images;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import javax.imageio.ImageIO;
@@ -15,6 +16,7 @@ import java.io.UncheckedIOException;
 import java.util.EnumSet;
 import java.util.List;
 
+@Disabled("This test fails on CI. Should be run manually from the IDE.")
 class TriangleComparisonTest {
 
     private final int width = 1_024;
