@@ -3,7 +3,6 @@ package io.github.bahaa.webgpu.internal;
 import io.github.bahaa.webgpu.api.QuerySet;
 import io.github.bahaa.webgpu.api.model.QueryType;
 import io.github.bahaa.webgpu.api.model.StringView;
-import io.github.bahaa.webgpu.ffm.webgpu_h;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
@@ -23,7 +22,7 @@ class QuerySetImpl extends ObjectBaseImpl implements QuerySet {
     @Override
     public void label(final String label) {
         try (final var arena = Arena.ofConfined()) {
-            webgpu_h.wgpuQuerySetSetLabel(this.pointer(), StringView.from(label).toSegment(arena));
+            wgpuQuerySetSetLabel(this.pointer(), StringView.from(label).toSegment(arena));
         }
     }
 
