@@ -132,6 +132,15 @@ class DeviceImpl extends ObjectBaseImpl implements Device {
     }
 
     @Override
+    public QuerySet createQuerySet(final QuerySetDescriptor descriptor) {
+        try (final var arena = Arena.ofConfined()) {
+            final var querySet = wgpuDeviceCreateQuerySet(this.pointer(), descriptor.toSegment(arena));
+            assertObject(querySet, "wgpuDeviceCreateQuerySet");
+            return QuerySetImpl.from(querySet);
+        }
+    }
+
+    @Override
     public void label(final String label) {
         try (final var arena = Arena.ofConfined()) {
             wgpuDeviceSetLabel(pointer(), StringView.from(label).toSegment(arena));

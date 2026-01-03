@@ -17,6 +17,7 @@ import java.lang.foreign.MemorySegment;
 import java.lang.foreign.ValueLayout;
 import java.nio.charset.StandardCharsets;
 import java.util.EnumSet;
+import java.util.List;
 
 import static io.github.bahaa.webgpu.samples.glfw.ffm.glfw3_h.*;
 import static io.github.bahaa.webgpu.samples.glfw.ffm.glfw3native_h.glfwGetCocoaWindow;
@@ -29,6 +30,8 @@ public abstract class SampleBase {
     protected static final int DEFAULT_HEIGHT = 800;
 
     private float aspectRatio = 1.0f;
+    private SurfaceCapabilities capabilities;
+    private boolean hasTimestampQuery;
 
     protected void run(final String[] args) {
         LibraryLoader.loadLibrary("glfw.3");
@@ -75,6 +78,8 @@ public abstract class SampleBase {
                             .build())
                     .join();
 
+            this.hasTimestampQuery = adapter.hasFeature(FeatureName.TIMESTAMP_QUERY);
+
             IO.println(adapter.adapterInfo());
 
             if (!adapter.hasFeature(FeatureName.BGRA8UNORM_STORAGE)) {
@@ -82,16 +87,17 @@ public abstract class SampleBase {
             }
 
             final var device = adapter.requestDevice(DeviceDescriptor.builder()
+                            .requiredFeatures(hasTimestampQuery() ? List.of(FeatureName.TIMESTAMP_QUERY) : List.of())
                             .build())
                     .join();
 
             final var queue = device.queue();
 
-            final var capabilities = surface.capabilities(adapter);
+            this.capabilities = surface.capabilities(adapter);
 
-            configureSurface(surface, device, capabilities, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+            configureSurface(surface, device, this.capabilities, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
-            setup(device, queue, capabilities);
+            setup(device, queue);
 
             glfwSetKeyCallback(window, GLFWkeyfun.allocate(keyCallback, arena));
             glfwSetFramebufferSizeCallback(window, GLFWframebuffersizefun.allocate(frameSizeCallback, arena));
@@ -117,7 +123,7 @@ public abstract class SampleBase {
                         final var h = height.get(ValueLayout.JAVA_INT, 0);
 
                         if (w != 0 && h != 0) {
-                            configureSurface(surface, device, capabilities, w, h);
+                            configureSurface(surface, device, this.capabilities, w, h);
                         }
                         continue;
                     }
@@ -138,7 +144,7 @@ public abstract class SampleBase {
         }
     }
 
-    protected abstract void setup(Device device, Queue queue, SurfaceCapabilities capabilities);
+    protected abstract void setup(Device device, Queue queue);
 
     protected abstract void render(Device device, Queue queue, Surface surface, Texture texture);
 
@@ -148,7 +154,7 @@ public abstract class SampleBase {
                                   final SurfaceCapabilities capabilities, final int width, final int height) {
         surface.configure(SurfaceConfiguration.builder()
                 .device(device)
-                .format(capabilities.getFormats().getFirst())
+                .format(getPreferredFormat())
                 .width(width)
                 .height(height)
                 .usage(EnumSet.of(TextureUsage.RENDER_ATTACHMENT))
@@ -201,6 +207,14 @@ public abstract class SampleBase {
                         .code(loadFromClassPath(path))
                         .build())
                 .build());
+    }
+
+    protected TextureFormat getPreferredFormat() {
+        return this.capabilities.getFormats().getFirst();
+    }
+
+    protected boolean hasTimestampQuery() {
+        return this.hasTimestampQuery;
     }
 
     private Surface createMetalSurface(final MemorySegment window, final Instance instance) {

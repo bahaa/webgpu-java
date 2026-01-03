@@ -52,7 +52,7 @@ public class Points extends SampleBase {
     }
 
     @Override
-    protected void setup(final Device device, final Queue queue, final SurfaceCapabilities capabilities) {
+    protected void setup(final Device device, final Queue queue) {
         final var module = loadShader(device, "wgsl/points.wgsl");
 
         this.renderPipeline = device.createRenderPipeline(RenderPipelineDescriptor.builder()
@@ -75,7 +75,7 @@ public class Points extends SampleBase {
                         .module(module)
                         .entryPoint("fs")
                         .addTarget(t -> t
-                                .format(capabilities.getFormats().getFirst())
+                                .format(getPreferredFormat())
                                 .writeMask(EnumSet.of(ColorWriteMask.ALL))
                         )
                 )
@@ -147,7 +147,7 @@ public class Points extends SampleBase {
         pass.draw(6, NUMBER_OF_POINTS, 0, 0);
 
         pass.end();
-        queue.submit(List.of(encoder.finish(CommandBufferDescriptor.create())));
+        queue.submit(List.of(encoder.finish()));
         surface.present();
     }
 

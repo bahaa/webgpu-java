@@ -28,4 +28,6 @@ public interface Device extends ObjectBase {
     Sampler createSampler(final @Nullable SamplerDescriptor descriptor);
 
     RenderBundleEncoder createRenderBundleEncoder(final RenderBundleEncoderDescriptor descriptor);
+
+    QuerySet createQuerySet(final QuerySetDescriptor descriptor);
 }

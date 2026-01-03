@@ -1,19 +1,22 @@
 package io.github.bahaa.webgpu.api.model;
 
 import io.github.bahaa.webgpu.ffm.WGPUBufferDescriptor;
+import io.helidon.builder.api.Option;
 import io.helidon.builder.api.Prototype;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
-import java.util.EnumSet;
 import java.util.Optional;
+import java.util.Set;
 
 @Prototype.Blueprint
 interface BufferDescriptorBlueprint extends StructBlueprint {
 
     Optional<String> label();
 
-    EnumSet<BufferUsage> usage();
+    @Option.Singular("usage")
+    @Option.DefaultCode("java.util.EnumSet.noneOf(BufferUsage.class)")
+    Set<BufferUsage> usage();
 
     long size();
 

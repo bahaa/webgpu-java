@@ -25,7 +25,7 @@ public class StyledRectangles extends SampleBase {
     }
 
     @Override
-    protected void setup(final Device device, final Queue queue, final SurfaceCapabilities capabilities) {
+    protected void setup(final Device device, final Queue queue) {
         this.rectangles.add(new Rectangle(
                 Color.rgba(1, 0.5, 1, 1),
                 new Vec2F(50, 100),
@@ -157,7 +157,7 @@ public class StyledRectangles extends SampleBase {
                         .module(shaderModule)
                         .entryPoint("fs_main")
                         .addTarget(ColorTargetState.builder()
-                                .format(capabilities.getFormats().getFirst())
+                                .format(getPreferredFormat())
                                 .blend(BlendState.builder()
                                         .color(BlendComponent.builder()
                                                 .srcFactor(BlendFactor.SRC_ALPHA)

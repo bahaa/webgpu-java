@@ -40,7 +40,7 @@ public class GameOfLife extends SampleBase {
     }
 
     @Override
-    protected void setup(final Device device, final Queue queue, final SurfaceCapabilities capabilities) {
+    protected void setup(final Device device, final Queue queue) {
         this.vertexBuffer = device.createBuffer(BufferDescriptor.builder()
                 .label("Cell Vertices")
                 .size(((long) this.vertices.length * Float.BYTES))
@@ -80,14 +80,14 @@ public class GameOfLife extends SampleBase {
         final var renderShaderModule = device.createShaderModule(ShaderModuleDescriptor.builder()
                 .label("Shader")
                 .source(ShaderSource.wgsl()
-                        .code(loadFromClassPath("wgsl/render-game-of-life.wgsl"))
+                        .code(loadFromClassPath("wgsl/game-of-life-render.wgsl"))
                         .build())
                 .build());
 
         final var computeShaderModule = device.createShaderModule(ShaderModuleDescriptor.builder()
                 .label("Shader")
                 .source(ShaderSource.wgsl()
-                        .code(loadFromClassPath("wgsl/compute-game-of-life.wgsl")
+                        .code(loadFromClassPath("wgsl/game-of-life-compute.wgsl")
                                 .replace("${WORKGROUP_SIZE}", String.valueOf(WORKGROUP_SIZE)))
                         .build())
                 .build());
@@ -144,7 +144,7 @@ public class GameOfLife extends SampleBase {
                         .module(renderShaderModule)
                         .entryPoint("fragmentMain")
                         .addTarget(ColorTargetState.builder()
-                                .format(capabilities.getFormats().getFirst())
+                                .format(getPreferredFormat())
                                 .writeMask(EnumSet.of(ColorWriteMask.ALL))
                                 .build()
                         )

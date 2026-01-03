@@ -14,7 +14,7 @@ interface ComputePipelineDescriptorBlueprint extends StructBlueprint {
 
     Optional<String> label();
 
-    PipelineLayout layout();
+    Optional<PipelineLayout> layout();
 
     ProgrammableStageDescriptor compute();
 
@@ -29,7 +29,7 @@ interface ComputePipelineDescriptorBlueprint extends StructBlueprint {
     default void updateSegment(final Arena arena, final MemorySegment struct) {
         label().ifPresent(label ->
                 WGPUComputePipelineDescriptor.label(struct, StringView.from(label).toSegment(arena)));
-        WGPUComputePipelineDescriptor.layout(struct, this.layout().pointer());
+        layout().ifPresent(layout -> WGPUComputePipelineDescriptor.layout(struct, layout.pointer()));
         WGPUComputePipelineDescriptor.compute(struct, this.compute().toSegment(arena));
     }
 }

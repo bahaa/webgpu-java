@@ -39,7 +39,7 @@ public abstract class CubeBase extends SampleBase {
     }
 
     @Override
-    protected void setup(final Device device, final Queue queue, final SurfaceCapabilities capabilities) {
+    protected void setup(final Device device, final Queue queue) {
         this.verticesBuffer = device.createBuffer(
                 BufferDescriptor.builder().label("Vertices")
                         .usage(EnumSet.of(BufferUsage.VERTEX, BufferUsage.COPY_DST))
@@ -81,7 +81,7 @@ public abstract class CubeBase extends SampleBase {
                         .module(shaderModule)
                         .entryPoint("fs_main")
                         .addTarget(ColorTargetState.builder()
-                                .format(capabilities.getFormats().getFirst())
+                                .format(getPreferredFormat())
                                 .writeMask(EnumSet.of(ColorWriteMask.ALL))
                                 .build())
                         .build())

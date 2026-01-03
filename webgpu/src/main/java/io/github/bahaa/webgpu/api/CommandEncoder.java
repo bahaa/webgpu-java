@@ -11,6 +11,10 @@ public interface CommandEncoder extends ObjectBase {
 
     CommandBuffer finish(final CommandBufferDescriptor descriptor);
 
+    default CommandBuffer finish() {
+        return finish(CommandBufferDescriptor.create());
+    }
+
     void clearBuffer(Buffer buffer, long offset, long size);
 
     void copyBufferToBuffer(Buffer source, long sourceOffset, Buffer destination, long destinationOffset, long size);

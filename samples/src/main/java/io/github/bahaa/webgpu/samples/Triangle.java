@@ -18,7 +18,7 @@ public class Triangle extends SampleBase {
     }
 
     @Override
-    protected void setup(final Device device, final Queue queue, final SurfaceCapabilities capabilities) {
+    protected void setup(final Device device, final Queue queue) {
 
         final var shaderModule = device.createShaderModule(ShaderModuleDescriptor.builder()
                 .label("Shader")
@@ -58,7 +58,7 @@ public class Triangle extends SampleBase {
                         .module(shaderModule)
                         .entryPoint("fs_main")
                         .addTarget(builder -> builder
-                                .format(capabilities.getFormats().getFirst())
+                                .format(getPreferredFormat())
                                 .writeMask(EnumSet.of(ColorWriteMask.ALL))
                         )
                         .build())
