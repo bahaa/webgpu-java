@@ -181,7 +181,7 @@
         <profile>
             <id>windows-amd64</id>
             <properties>
-                <jextract.executable>${maven.multiModuleProjectDirectory}/target/jextract-25/bin/jextract
+                <jextract.executable>${maven.multiModuleProjectDirectory}/target/jextract-25/bin/jextract.bat
                 </jextract.executable>
             </properties>
             <build>
