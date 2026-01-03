@@ -17,6 +17,10 @@ public interface RenderPassEncoder extends PassEncoder {
         draw(vertexCount, 1, 0, 0);
     }
 
+    default void draw(final int vertexCount, final int instanceCount) {
+        draw(vertexCount, instanceCount, 0, 0);
+    }
+
     void drawIndexed(int indexCount, int instanceCount, int firstIndex, int baseVertex, int firstInstance);
 
     void drawIndexedIndirect(Buffer indirectBuffer, int indirectOffset);

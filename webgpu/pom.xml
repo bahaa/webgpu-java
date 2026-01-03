@@ -22,6 +22,7 @@
             <groupId>io.github.bahaa.webgpu</groupId>
             <artifactId>wgpu-native-all</artifactId>
             <version>${project.parent.version}</version>
+            <scope>runtime</scope>
         </dependency>
 
         <dependency>

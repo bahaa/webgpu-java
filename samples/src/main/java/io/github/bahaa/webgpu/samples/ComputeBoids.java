@@ -19,6 +19,8 @@ public class ComputeBoids extends SampleBase {
     private RenderPipeline renderPipeline;
     private Buffer spriteVertexBuffer;
 
+    private boolean pause = false;
+
     static void main(final String... args) {
         new ComputeBoids().run(args);
     }
@@ -169,12 +171,26 @@ public class ComputeBoids extends SampleBase {
         queue.submit(List.of(encoder.finish()));
         surface.present();
 
-        this.time++;
+        if (!this.pause) {
+            this.time++;
+        }
     }
 
     @Override
     protected String title() {
         return "WebGPU Compute Boids";
+    }
+
+    @Override
+    protected void onKeyboardEvent(final int key, final int scancode, final int action, final int mods) {
+        // only key press
+        if (action != 1) {
+            return;
+        }
+
+        if (key == 32 /* space */) {
+            this.pause = !this.pause;
+        }
     }
 
     private void updateSimParams(final Queue queue) {

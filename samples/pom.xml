@@ -23,13 +23,18 @@
         <dependency>
             <groupId>io.github.bahaa.webgpu</groupId>
             <artifactId>webgpu</artifactId>
-            <version>${project.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>${version.exec-maven-plugin}</version>
+            </plugin>
             <plugin>
                 <groupId>io.github.download-maven-plugin</groupId>
                 <artifactId>download-maven-plugin</artifactId>

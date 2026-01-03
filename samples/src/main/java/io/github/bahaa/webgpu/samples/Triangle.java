@@ -76,10 +76,8 @@ public class Triangle extends SampleBase {
     protected void render(final Device device, final Queue queue,
                           final Surface surface,
                           final Texture texture) {
-        final var targetView = texture.createView(null);
-
-        final var encoder = device.createCommandEncoder(CommandEncoderDescriptor.builder()
-                .build());
+        final var targetView = texture.createView();
+        final var encoder = device.createCommandEncoder(CommandEncoderDescriptor.create());
 
         final var pass = encoder.beginRenderPass(RenderPassDescriptor.builder()
                 .label("Clear BG")
@@ -90,18 +88,11 @@ public class Triangle extends SampleBase {
                         .clearValue(this.color))
                 .build());
         pass.setPipeline(this.renderPipeline);
-        pass.draw(3, 1, 0, 0);
+        pass.draw(3, 1);
         pass.end();
-        pass.close();
 
-        final var command = encoder.finish(CommandBufferDescriptor.builder().build());
-
-        queue.submit(List.of(command));
+        queue.submit(List.of(encoder.finish()));
         surface.present();
-
-        command.close();
-        encoder.close();
-        targetView.close();
     }
 
     @Override

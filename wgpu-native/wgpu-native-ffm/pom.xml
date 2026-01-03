@@ -77,7 +77,6 @@
                         <configuration>
                             <headerFile>${project.build.directory}/include/webgpu/wgpu.h</headerFile>
                             <libraries>
-                                <library>wgpu_native</library>
                             </libraries>
                             <targetPackage>io.github.bahaa.webgpu.ffm</targetPackage>
                             <headerClassName>webgpu_h</headerClassName>

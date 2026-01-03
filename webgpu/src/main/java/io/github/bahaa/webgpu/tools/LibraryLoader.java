@@ -37,6 +37,8 @@ public enum LibraryLoader {
             Files.copy(is, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
             System.load(file.getAbsolutePath());
+        } catch (final UnsatisfiedLinkError e) {
+            LOGGER.log(Level.INFO, "Could not load library {0} from classpath.");
         } catch (final IOException e) {
             throw new UncheckedIOException(e);
         }
