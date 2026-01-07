@@ -28,15 +28,16 @@ public enum LibraryLoader {
                 return;
             }
 
-            final var fileName = path.getFileName().toString();
-            final var prefix = fileName.substring(0, fileName.lastIndexOf('.'));
-            final var suffix = fileName.substring(fileName.lastIndexOf('.') + 1);
-            final var file = java.io.File.createTempFile(prefix, suffix);
-            file.deleteOnExit();
+            final var directory = Files.createTempDirectory(name);
+            final var filePath = directory.resolve(path.getFileName());
 
-            Files.copy(is, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-            System.load(file.getAbsolutePath());
+            try {
+                Files.copy(is, filePath, StandardCopyOption.REPLACE_EXISTING);
+                System.load(filePath.toAbsolutePath().toString());
+            } finally {
+                var _ = filePath.toFile().delete();
+                var _ = directory.toFile().delete();
+            }
         } catch (final UnsatisfiedLinkError e) {
             LOGGER.log(Level.INFO, "Could not load library {0} from classpath.");
         } catch (final IOException e) {
