@@ -56,6 +56,10 @@
                             <pattern>lib-vc2022\/</pattern>
                             <replacement>./</replacement>
                         </org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                        <org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
+                            <pattern>glfw3\.dll</pattern>
+                            <replacement>glfw.3.dll</replacement>
+                        </org.codehaus.plexus.components.io.filemappers.RegExpFileMapper>
                     </fileMappers>
                 </configuration>
                 <executions>
@@ -94,7 +98,7 @@
                         <configuration>
                             <url>${glfw.download.base.url}/glfw-${version.glfw}.bin.WIN64.zip</url>
                             <includes>*/lib-vc2022/*.dll</includes>
-                            <outputDirectory>${project.build.directory}/classes/foreign/windows-x86_64</outputDirectory>
+                            <outputDirectory>${project.build.directory}/classes/foreign/windows-arm64</outputDirectory>
                             <md5>725c211378d00f3eee5df5acc8108742</md5>
                         </configuration>
                     </execution>
