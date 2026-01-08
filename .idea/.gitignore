@@ -1,10 +1,10 @@
-# Default ignored files
-/shelf/
-/workspace.xml
-# Ignored default folder with query files
-/queries/
-# Datasource local storage ignored files
-/dataSources/
-/dataSources.local.xml
-# Editor-based HTTP Client requests
-/httpRequests/
+*
+!.gitignore
+
+# See https://stackoverflow.com/a/67976259/6692043
+!codeStyles/
+!codeStyles/Project.xml
+!codeStyles/codeStyleConfig.xml
+!inspectionProfiles/
+!inspectionProfiles/Project_Default.xml
+!icon.svg
