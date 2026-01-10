@@ -16,6 +16,7 @@
         <version.glfw>3.4</version.glfw>
 
         <glfw.download.base.url>https://github.com/glfw/glfw/releases/download/${version.glfw}</glfw.download.base.url>
+        <windows.sdk.root>C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0</windows.sdk.root>
     </properties>
 
     <dependencies>
@@ -125,6 +126,10 @@
                             </libraries>
                             <targetPackage>io.github.bahaa.webgpu.samples.glfw.ffm</targetPackage>
                             <headerClassName>glfw3_h</headerClassName>
+                            <headerSearchPaths>
+                                <headerSearchPath>${windows.sdk.root}\um</headerSearchPath>
+                                <headerSearchPath>${windows.sdk.root}\shared</headerSearchPath>
+                            </headerSearchPaths>
                         </configuration>
                     </execution>
                 </executions>
