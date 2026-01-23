@@ -5,6 +5,9 @@ Experimental Java binding for [wgpu-native](https://github.com/gfx-rs/wgpu-nativ
 
 The project uses Java's FFM to access native libraries. So, JDK 25+ is required.
 
+> [!NOTE]
+> Because of a JDK [bug](https://bugs.openjdk.org/browse/JDK-8366113), you should use Java 25.0.2 or later.
+
 ## Samples
 
 The project contains some [samples](samples/src/main/java/io/github/bahaa/webgpu/samples) ported from JavaScript.
@@ -13,7 +16,11 @@ The library itself doesn't handle creating of native surfaces or any windowing r
 use [GLFW](https://www.glfw.org/) to create the window, and Objective-C runtime with FFM to create the Metal Surface.
 
 > [!IMPORTANT]
-> Use these JVM flags `--enable-native-access=ALL-UNNAMED -XstartOnFirstThread`
+> On macOS, use these JVM flags `-XstartOnFirstThread` so GLFW can create a window.
+
+> [!IMPORTANT]
+> On Windows, GLFW needs Windows SDK. You can pass the SDK root dir by using this flag when building using Maven:
+> `-Dwindows.sdk.root="C:\Program Files (x86)\Windows Kits\10\Include\10.0.26100.0"`
 
 ### Drawing a Triangle to a PNG File
 
