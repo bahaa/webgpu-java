@@ -99,7 +99,7 @@
                         <configuration>
                             <url>${glfw.download.base.url}/glfw-${version.glfw}.bin.WIN64.zip</url>
                             <includes>*/lib-vc2022/*.dll</includes>
-                            <outputDirectory>${project.build.directory}/classes/foreign/windows-arm64</outputDirectory>
+                            <outputDirectory>${project.build.directory}/classes/foreign/windows-amd64</outputDirectory>
                             <md5>725c211378d00f3eee5df5acc8108742</md5>
                         </configuration>
                     </execution>
