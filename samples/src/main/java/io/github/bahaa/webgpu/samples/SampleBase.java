@@ -80,7 +80,14 @@ public abstract class SampleBase {
 
             this.hasTimestampQuery = adapter.hasFeature(FeatureName.TIMESTAMP_QUERY);
 
-            IO.println(adapter.adapterInfo());
+            IO.println(adapter.info());
+
+            IO.println("Adapter supported features:");
+            for (final var feature : adapter.features()) {
+                IO.println("\t%s".formatted(feature.name()));
+            }
+
+            IO.println("Adapter Limits: %s".formatted(adapter.limits()));
 
             if (!adapter.hasFeature(FeatureName.BGRA8UNORM_STORAGE)) {
                 IO.println("Adapter does not support BGRA8UNORM_STORAGE");

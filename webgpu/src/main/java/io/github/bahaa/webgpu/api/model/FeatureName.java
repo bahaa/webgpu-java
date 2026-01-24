@@ -18,12 +18,22 @@ public enum FeatureName {
     FLOAT32_BLENDABLE(0X0000000E),
     CLIP_DISTANCES(0X0000000F),
     DUAL_SOURCE_BLENDING(0X00000010),
+    Force32(0x7FFFFFFF),
     ;
 
     private final int value;
 
     FeatureName(final int value) {
         this.value = value;
+    }
+
+    public static FeatureName valueOf(final int value) {
+        for (final var featureName : values()) {
+            if (featureName.value() == value) {
+                return featureName;
+            }
+        }
+        return UNDEFINED;
     }
 
     public int value() {
