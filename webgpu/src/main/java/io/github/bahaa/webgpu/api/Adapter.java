@@ -1,6 +1,9 @@
 package io.github.bahaa.webgpu.api;
 
-import io.github.bahaa.webgpu.api.model.*;
+import io.github.bahaa.webgpu.api.model.AdapterInfo;
+import io.github.bahaa.webgpu.api.model.DeviceDescriptor;
+import io.github.bahaa.webgpu.api.model.FeatureName;
+import io.github.bahaa.webgpu.api.model.SupportedLimits;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -21,7 +24,7 @@ public interface Adapter extends NativeObject {
     /// A [Set] of [FeatureName] that describes additional functionality supported by the adapter.
     Set<FeatureName> features();
 
-    /// A [GPULimits] object that describes the limits supported by the adapter.
+    /// A [SupportedLimits] object that describes the limits supported by the adapter.
     SupportedLimits limits();
 
     /// Returns `true` if the adapter supports the provided feature.

@@ -121,39 +121,40 @@ class AdapterImpl extends NativeObjectImpl implements Adapter {
         try (final var arena = Arena.ofConfined()) {
             final var struct = WGPULimits.allocate(arena);
             wgpuAdapterGetLimits(this.pointer(), struct);
-            return new SupportedLimits(
-                    WGPULimits.maxTextureDimension1D(struct),
-                    WGPULimits.maxTextureDimension2D(struct),
-                    WGPULimits.maxTextureDimension3D(struct),
-                    WGPULimits.maxTextureArrayLayers(struct),
-                    WGPULimits.maxBindGroups(struct),
-                    WGPULimits.maxBindGroupsPlusVertexBuffers(struct),
-                    WGPULimits.maxBindingsPerBindGroup(struct),
-                    WGPULimits.maxDynamicUniformBuffersPerPipelineLayout(struct),
-                    WGPULimits.maxDynamicStorageBuffersPerPipelineLayout(struct),
-                    WGPULimits.maxSampledTexturesPerShaderStage(struct),
-                    WGPULimits.maxSamplersPerShaderStage(struct),
-                    WGPULimits.maxStorageBuffersPerShaderStage(struct),
-                    WGPULimits.maxStorageTexturesPerShaderStage(struct),
-                    WGPULimits.maxUniformBuffersPerShaderStage(struct),
-                    WGPULimits.maxUniformBufferBindingSize(struct),
-                    WGPULimits.maxStorageBufferBindingSize(struct),
-                    WGPULimits.minUniformBufferOffsetAlignment(struct),
-                    WGPULimits.minStorageBufferOffsetAlignment(struct),
-                    WGPULimits.maxVertexBuffers(struct),
-                    WGPULimits.maxBufferSize(struct),
-                    WGPULimits.maxVertexAttributes(struct),
-                    WGPULimits.maxVertexBufferArrayStride(struct),
-                    WGPULimits.maxInterStageShaderVariables(struct),
-                    WGPULimits.maxColorAttachments(struct),
-                    WGPULimits.maxColorAttachmentBytesPerSample(struct),
-                    WGPULimits.maxComputeWorkgroupStorageSize(struct),
-                    WGPULimits.maxComputeInvocationsPerWorkgroup(struct),
-                    WGPULimits.maxComputeWorkgroupSizeX(struct),
-                    WGPULimits.maxComputeWorkgroupSizeY(struct),
-                    WGPULimits.maxComputeWorkgroupSizeZ(struct),
-                    WGPULimits.maxComputeWorkgroupsPerDimension(struct)
-            );
+            return SupportedLimits.builder()
+                    .maxTextureDimension1D(WGPULimits.maxTextureDimension1D(struct))
+                    .maxTextureDimension2D(WGPULimits.maxTextureDimension2D(struct))
+                    .maxTextureDimension3D(WGPULimits.maxTextureDimension3D(struct))
+                    .maxTextureArrayLayers(WGPULimits.maxTextureArrayLayers(struct))
+                    .maxBindGroups(WGPULimits.maxBindGroups(struct))
+                    .maxBindGroupsPlusVertexBuffers(WGPULimits.maxBindGroupsPlusVertexBuffers(struct))
+                    .maxBindingsPerBindGroup(WGPULimits.maxBindingsPerBindGroup(struct))
+                    .maxDynamicUniformBuffersPerPipelineLayout(
+                            WGPULimits.maxDynamicUniformBuffersPerPipelineLayout(struct))
+                    .maxDynamicStorageBuffersPerPipelineLayout(
+                            WGPULimits.maxDynamicStorageBuffersPerPipelineLayout(struct))
+                    .maxSampledTexturesPerShaderStage(WGPULimits.maxSampledTexturesPerShaderStage(struct))
+                    .maxSamplersPerShaderStage(WGPULimits.maxSamplersPerShaderStage(struct))
+                    .maxStorageBuffersPerShaderStage(WGPULimits.maxStorageBuffersPerShaderStage(struct))
+                    .maxStorageTexturesPerShaderStage(WGPULimits.maxStorageTexturesPerShaderStage(struct))
+                    .maxUniformBuffersPerShaderStage(WGPULimits.maxUniformBuffersPerShaderStage(struct))
+                    .maxUniformBufferBindingSize(WGPULimits.maxUniformBufferBindingSize(struct))
+                    .maxStorageBufferBindingSize(WGPULimits.maxStorageBufferBindingSize(struct))
+                    .minUniformBufferOffsetAlignment(WGPULimits.minUniformBufferOffsetAlignment(struct))
+                    .minStorageBufferOffsetAlignment(WGPULimits.minStorageBufferOffsetAlignment(struct))
+                    .maxVertexBuffers(WGPULimits.maxVertexBuffers(struct))
+                    .maxBufferSize(WGPULimits.maxBufferSize(struct))
+                    .maxVertexAttributes(WGPULimits.maxVertexAttributes(struct))
+                    .maxVertexBufferArrayStride(WGPULimits.maxVertexBufferArrayStride(struct))
+                    .maxInterStageShaderVariables(WGPULimits.maxInterStageShaderVariables(struct))
+                    .maxColorAttachments(WGPULimits.maxColorAttachments(struct))
+                    .maxComputeWorkgroupStorageSize(WGPULimits.maxComputeWorkgroupStorageSize(struct))
+                    .maxComputeInvocationsPerWorkgroup(WGPULimits.maxComputeInvocationsPerWorkgroup(struct))
+                    .maxComputeWorkgroupSizeX(WGPULimits.maxComputeWorkgroupSizeX(struct))
+                    .maxComputeWorkgroupSizeY(WGPULimits.maxComputeWorkgroupSizeY(struct))
+                    .maxComputeWorkgroupSizeZ(WGPULimits.maxComputeWorkgroupSizeZ(struct))
+                    .maxComputeWorkgroupsPerDimension(WGPULimits.maxComputeWorkgroupsPerDimension(struct))
+                    .build();
         }
     }
 

@@ -18,7 +18,7 @@ interface DeviceDescriptorBlueprint extends StructBlueprint {
     @Option.Singular("requiredFeature")
     List<FeatureName> requiredFeatures();
 
-    Optional<GPULimitsBlueprint> requiredLimits();
+    Optional<SupportedLimitsBlueprint> requiredLimits();
 
     Optional<QueueDescriptorBlueprint> defaultQueue();
 

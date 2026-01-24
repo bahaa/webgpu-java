@@ -1,13 +1,19 @@
 package io.github.bahaa.webgpu.api.model;
 
+import io.github.bahaa.webgpu.api.Adapter;
 import io.github.bahaa.webgpu.ffm.WGPULimits;
 import io.helidon.builder.api.Prototype;
 
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 
+/// The [SupportedLimits] object of the WebGPU API describes the limits supported by an
+///  [io.github.bahaa.webgpu.api.Adapter].
+///
+/// The [SupportedLimits] object for the current adapter is accessed via the
+///  [Adapter#limits()] property.
 @Prototype.Blueprint
-interface GPULimitsBlueprint extends StructBlueprint {
+interface SupportedLimitsBlueprint extends StructBlueprint {
 
     int maxTextureDimension1D();
 
