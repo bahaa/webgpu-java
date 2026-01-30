@@ -102,10 +102,13 @@ void main() {
         final var image = Images.bufferedImageFromRGBA8Data(width, height, bytes);
         outputBuffer.unmap();
 
-        try (final var os = Files.newOutputStream(Path.of("./target/triangle.png"))) {
+        final var outDir = Path.of("target");
+        Files.createDirectories(outDir);
+
+        try (final var os = Files.newOutputStream(outDir.resolve("triangle.png"))) {
             ImageIO.write(image, "png", os);
-        } catch (final IOException e) {
-            throw new UncheckedIOException(e);
         }
+    } catch (final IOException e) {
+        throw new UncheckedIOException(e);
     }
 }

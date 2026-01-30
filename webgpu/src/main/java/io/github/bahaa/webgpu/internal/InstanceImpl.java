@@ -13,14 +13,14 @@ import io.github.bahaa.webgpu.ffm.WGPURequestAdapterCallbackInfo;
 import java.lang.foreign.Arena;
 import java.lang.foreign.MemorySegment;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static io.github.bahaa.webgpu.ffm.webgpu_h.*;
 
 public class InstanceImpl extends NativeObjectImpl implements Instance {
 
-    private final Executor executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private InstanceImpl(final MemorySegment pointer) {
         super(pointer);
@@ -60,8 +60,10 @@ public class InstanceImpl extends NativeObjectImpl implements Instance {
 
         final var callbackInfo = WGPURequestAdapterCallbackInfo.allocate(arena);
         WGPURequestAdapterCallbackInfo.callback(callbackInfo, callbackStub);
+        WGPURequestAdapterCallbackInfo.mode(callbackInfo, CallbackMode.ALLOW_PROCESS_EVENTS.value());
 
         var _ = wgpuInstanceRequestAdapter(arena, this.pointer(), options.toSegment(arena), callbackInfo);
+        scheduleFuturePoller();
 
         return future;
     }
@@ -74,13 +76,14 @@ public class InstanceImpl extends NativeObjectImpl implements Instance {
     }
 
     @Override
-    public void processEvents() {
-        wgpuInstanceProcessEvents(this.pointer());
+    public void close() {
+        super.close();
+        this.executor.shutdown();
     }
 
     void scheduleFuturePoller() {
         this.executor.execute(() -> {
-            wgpuInstanceWaitAny(this.pointer(), 0, MemorySegment.NULL, Long.MAX_VALUE);
+            wgpuInstanceProcessEvents(this.pointer());
         });
     }
 

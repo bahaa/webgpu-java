@@ -32,7 +32,7 @@ public abstract class NativeObjectImpl implements NativeObject {
     protected abstract ObjectBaseImpl.ObjectCleaner cleaner();
 
     @Override
-    public final void close() {
+    public void close() {
         this.cleanable.clean();
     }
 

@@ -74,19 +74,17 @@ class BufferImpl extends ObjectBaseImpl implements Buffer {
         };
 
         try (final var arena = Arena.ofConfined()) {
-            final var stub = WGPUBufferMapCallback.allocate(callback, arena);
+            final var stub = WGPUBufferMapCallback.allocate(callback, Arena.ofAuto());
             final var info = WGPUBufferMapCallbackInfo.allocate(arena);
             WGPUBufferMapCallbackInfo.callback(info, stub);
-            WGPUBufferMapCallbackInfo.callback(info, stub);
+            WGPUBufferMapCallbackInfo.mode(info, CallbackMode.ALLOW_PROCESS_EVENTS.value());
 
             final var modeFlags = mode.stream()
                     .mapToLong(MapMode::value)
                     .reduce(0, (a, b) -> a | b);
 
             var _ = wgpuBufferMapAsync(arena, this.pointer(), modeFlags, offset, size, info);
-
-            // FIXME: this makes this method sync. Until `wgpuInstanceWaitAny` is implemented.
-            this.device.poll(true);
+            this.device().adapter().instance().scheduleFuturePoller();
         }
 
         return future;

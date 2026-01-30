@@ -75,7 +75,7 @@
                         </goals>
                         <phase>generate-sources</phase>
                         <configuration>
-                            <headerFile>${project.build.directory}/include/webgpu/wgpu.h</headerFile>
+                            <headerFile>${project.build.directory}/include/webgpu/webgpu.h</headerFile>
                             <libraries>
                             </libraries>
                             <targetPackage>io.github.bahaa.webgpu.ffm</targetPackage>

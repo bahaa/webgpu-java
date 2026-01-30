@@ -20,12 +20,15 @@ import static io.github.bahaa.webgpu.ffm.webgpu_h.*;
 
 class ShaderModuleImpl extends ObjectBaseImpl implements ShaderModule {
 
-    protected ShaderModuleImpl(final MemorySegment pointer) {
+    private final DeviceImpl device;
+
+    protected ShaderModuleImpl(final MemorySegment pointer, final DeviceImpl device) {
         super(pointer);
+        this.device = device;
     }
 
-    static ShaderModuleImpl from(final MemorySegment pointer) {
-        return new ShaderModuleImpl(pointer);
+    static ShaderModuleImpl from(final MemorySegment pointer, final DeviceImpl device) {
+        return new ShaderModuleImpl(pointer, device);
     }
 
     @Override
@@ -72,7 +75,9 @@ class ShaderModuleImpl extends ObjectBaseImpl implements ShaderModule {
             final var stub = WGPUCompilationInfoCallback.allocate(callback, arena);
             final var callbackInfo = WGPUCompilationInfoCallbackInfo.allocate(arena);
             WGPUCompilationInfoCallbackInfo.callback(callbackInfo, stub);
+            WGPUCompilationInfoCallbackInfo.mode(callbackInfo, CallbackMode.ALLOW_PROCESS_EVENTS.value());
             var _ = wgpuShaderModuleGetCompilationInfo(arena, this.pointer(), callbackInfo);
+            this.device.adapter().instance().scheduleFuturePoller();
         }
 
         return future;

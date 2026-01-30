@@ -36,7 +36,7 @@ class DeviceImpl extends ObjectBaseImpl implements Device {
         try (final var arena = Arena.ofConfined()) {
             final var shaderModule = wgpuDeviceCreateShaderModule(this.pointer(), descriptor.toSegment(arena));
             assertObject(shaderModule, "wgpuDeviceCreateShaderModule");
-            return ShaderModuleImpl.from(shaderModule);
+            return ShaderModuleImpl.from(shaderModule, this);
         }
     }
 
@@ -149,10 +149,6 @@ class DeviceImpl extends ObjectBaseImpl implements Device {
 
     AdapterImpl adapter() {
         return this.adapter;
-    }
-
-    boolean poll(final boolean wait) {
-        return wgpuDevicePoll(this.pointer(), wait ? 1 : 0, MemorySegment.NULL) > 0;
     }
 
     private static class Cleaner extends ObjectCleaner {

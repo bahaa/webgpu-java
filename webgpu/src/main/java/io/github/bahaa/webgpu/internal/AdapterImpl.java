@@ -66,12 +66,14 @@ class AdapterImpl extends NativeObjectImpl implements Adapter {
 
             final var callbackInfo = WGPURequestDeviceCallbackInfo.allocate(arena);
             WGPURequestDeviceCallbackInfo.callback(callbackInfo, callbackStub);
+            WGPURequestDeviceCallbackInfo.mode(callbackInfo, CallbackMode.ALLOW_PROCESS_EVENTS.value());
 
             final var struct = descriptor.toSegment(arena);
             WGPUDeviceDescriptor.uncapturedErrorCallbackInfo(struct, this.uncapturedErrorCallbackInfo);
 
             var _ = wgpuAdapterRequestDevice(arena, this.pointer(),
                     struct, callbackInfo);
+            this.instance.scheduleFuturePoller();
         }
 
 
