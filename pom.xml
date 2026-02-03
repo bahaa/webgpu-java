@@ -20,7 +20,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <version.wgpu-native>v27.0.4.0</version.wgpu-native>
-        <version.helidon>4.3.3</version.helidon>
+        <version.helidon>4.3.4</version.helidon>
         <version.jspecify>1.0.0</version.jspecify>
 
         <!-- Test Dependencies -->
