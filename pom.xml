@@ -26,7 +26,7 @@
         <!-- Test Dependencies -->
         <version.junit>6.0.3</version.junit>
         <version.assertj>3.27.7</version.assertj>
-        <version.archunit>1.4.1</version.archunit>
+        <version.archunit>1.4.2</version.archunit>
         <version.image-comparison>4.4.0</version.image-comparison>
 
         <!-- Maven Plugins -->
