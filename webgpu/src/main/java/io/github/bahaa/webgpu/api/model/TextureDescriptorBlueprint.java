@@ -63,5 +63,6 @@ interface TextureDescriptorBlueprint extends StructBlueprint {
             index++;
         }
         WGPUTextureDescriptor.viewFormats(struct, segment);
+        WGPUTextureDescriptor.viewFormatCount(struct, this.viewFormats().size());
     }
 }

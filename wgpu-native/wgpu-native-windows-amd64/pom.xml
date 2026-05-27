@@ -39,7 +39,7 @@
                             <url>${wgpu.native.download.base.url}/wgpu-windows-x86_64-msvc-release.zip</url>
                             <includes>lib/wgpu_native.dll</includes>
                             <outputDirectory>${project.build.directory}/classes/foreign/windows-amd64</outputDirectory>
-                            <sha256>cbb15ac6499476bd555190922142a466ba91ec9032cc6bef5e59063e829425ea</sha256>
+                            <sha256>6ec736b6e7c7259ee5d13cdd06eac4407d1f38539b2e555cbe7040e6098f9dd9</sha256>
                         </configuration>
                     </execution>
                 </executions>

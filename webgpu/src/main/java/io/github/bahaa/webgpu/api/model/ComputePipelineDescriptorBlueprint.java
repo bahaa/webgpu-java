@@ -16,7 +16,7 @@ interface ComputePipelineDescriptorBlueprint extends StructBlueprint {
 
     Optional<PipelineLayout> layout();
 
-    ProgrammableStageDescriptor compute();
+    ComputeStateBlueprint compute();
 
     @Override
     default MemorySegment toSegment(final Arena arena) {

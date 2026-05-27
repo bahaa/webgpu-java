@@ -12,7 +12,7 @@ interface ComputePassDescriptorBlueprint extends StructBlueprint {
 
     Optional<String> label();
 
-    Optional<ComputePassTimestampWrites> timestampWrites();
+    Optional<PassTimestampWrites> timestampWrites();
 
     @Override
     default MemorySegment toSegment(final Arena arena) {

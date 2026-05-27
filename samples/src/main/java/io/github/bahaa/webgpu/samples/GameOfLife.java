@@ -158,7 +158,7 @@ public class GameOfLife extends SampleBase {
         this.computePipeline = device.createComputePipeline(ComputePipelineDescriptor.builder()
                 .label("Simulation pipeline")
                 .layout(pipelineLayout)
-                .compute(ProgrammableStageDescriptor.builder()
+                .compute(ComputeState.builder()
                         .module(computeShaderModule)
                         .entryPoint("computeMain")
                         .build())

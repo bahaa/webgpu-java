@@ -23,7 +23,7 @@ interface RenderPassDescriptorBlueprint extends StructBlueprint {
 
     Optional<QuerySet> occlusionQuerySet();
 
-    Optional<RenderPassTimestampWrites> timestampWrites();
+    Optional<PassTimestampWrites> timestampWrites();
 
     @Override
     default MemorySegment toSegment(final Arena arena) {
