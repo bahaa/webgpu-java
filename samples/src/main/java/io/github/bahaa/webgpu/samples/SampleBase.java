@@ -116,7 +116,10 @@ public abstract class SampleBase {
                 final var texture = surfaceTexture.texture();
 
                 switch (surfaceTexture.status()) {
-                    case OUT_OF_MEMORY, DEVICE_LOST, FORCE32 -> throw new OutOfMemoryError("Out of memory");
+                    case ERROR -> {
+                        IO.println("Error getting surface texture: %s!".formatted(surfaceTexture.status()));
+                        continue;
+                    }
                     case TIMEOUT, OUTDATED, LOST -> {
                         if (texture != null) {
                             texture.close();
@@ -134,13 +137,13 @@ public abstract class SampleBase {
                         }
                         continue;
                     }
+                    case SUCCESS_OPTIMAL, SUCCESS_SUBOPTIMAL -> {
+                        render(device, queue, surface, texture);
+                        // All WebGPU objects are auto-closable, but if you forgot to close them, they will be closed when
+                        // the object being garbage collected.
+                        texture.close();
+                    }
                 }
-
-                render(device, queue, surface, texture);
-
-                // All WebGPU objects are auto-closable, but if you forgot to close them, they will be closed when
-                // the object being garbage collected.
-                texture.close();
             }
 
             surface.close();
@@ -164,6 +167,8 @@ public abstract class SampleBase {
                 .format(getPreferredFormat())
                 .width(width)
                 .height(height)
+                .presentMode(PresentMode.FIFO)
+                .alphaMode(this.capabilities.getAlphaModes().getFirst())
                 .usage(EnumSet.of(TextureUsage.RENDER_ATTACHMENT))
                 .build());
     }

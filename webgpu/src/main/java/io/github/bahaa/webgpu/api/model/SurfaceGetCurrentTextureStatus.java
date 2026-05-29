@@ -10,7 +10,7 @@ public enum SurfaceGetCurrentTextureStatus {
     SUCCESS_OPTIMAL(0x00000001),
 
     /**
-     * The surface can present the frame, but may need reconfiguration.
+     * Still OK - the surface can present the frame, but in a suboptimal way. The surface may need reconfiguration.
      */
     SUCCESS_SUBOPTIMAL(0x00000002),
 
@@ -25,24 +25,16 @@ public enum SurfaceGetCurrentTextureStatus {
     OUTDATED(0x00000004),
 
     /**
-     * The connection to the surface owner was lost.
+     * The connection to whatever owns the surface was lost, or generally needs to be fully reinitialized.
      */
     LOST(0x00000005),
 
     /**
-     * The system ran out of memory.
+     * There was some deterministic error (for example, the surface is not configured, or there was an
+     *
+     * @ref OutStructChainError). Should produce @ref ImplementationDefinedLogging containing details.
      */
-    OUT_OF_MEMORY(0x00000006),
-
-    /**
-     * The WGPUDevice configured on the WGPUSurface was lost.
-     */
-    DEVICE_LOST(0x00000007),
-
-    /**
-     * The surface is not configured, or there was an error.
-     */
-    ERROR(0x00000008),
+    ERROR(0x00000006),
 
     FORCE32(0x7FFFFFFF);
 
@@ -61,7 +53,7 @@ public enum SurfaceGetCurrentTextureStatus {
                 return status;
             }
         }
-        return ERROR;
+        throw new IllegalArgumentException("invalid value %d".formatted(value));
     }
 
     public int getValue() {
