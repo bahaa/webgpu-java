@@ -21,7 +21,7 @@
 
         <version.wgpu-native>v27.0.4.0</version.wgpu-native>
         <version.helidon>4.5.1</version.helidon>
-        <version.jspecify>1.0.0</version.jspecify>
+        <version.jspecify>1.0.1</version.jspecify>
 
         <!-- Test Dependencies -->
         <version.junit>6.1.2</version.junit>
