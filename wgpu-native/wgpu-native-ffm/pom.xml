@@ -55,7 +55,7 @@
                             <url>${wgpu.native.download.base.url}/wgpu-macos-aarch64-release.zip</url>
                             <includes>include/**</includes>
                             <outputDirectory>${project.build.directory}/</outputDirectory>
-                            <sha256>15367c26fdbe6892db35007d39f3883593384e777360b70e6bd704cb5dedde53</sha256>
+                            <sha256>a5797a37b1adf720bcd5dcffb291edbbd5b7b14be0a3874c28e6393a655a7a3e</sha256>
                         </configuration>
                     </execution>
                 </executions>

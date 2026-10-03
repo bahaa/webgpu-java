@@ -11,11 +11,11 @@ public enum VertexStepMode {
      * 0x00000001.
      * Indicates no value is passed for this argument.
      */
-    UNDEFINED(0x00000001),
+    UNDEFINED(0x00000000),
 
-    VERTEX(0x00000002),
+    VERTEX(0x00000001),
 
-    INSTANCE(0x00000003),
+    INSTANCE(0x00000002),
 
     FORCE32(0x7FFFFFFF);
 

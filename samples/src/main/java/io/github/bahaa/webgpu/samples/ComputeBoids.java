@@ -71,9 +71,10 @@ public class ComputeBoids extends SampleBase {
                 .build());
 
         this.computePipeline = device.createComputePipeline(ComputePipelineDescriptor.builder()
-                .compute(builder -> builder
+                .compute(ComputeState.builder()
                         .module(loadShader(device, "wgsl/compute-boids-compute.wgsl"))
                         .entryPoint("main")
+                        .build()
                 )
                 .build());
 

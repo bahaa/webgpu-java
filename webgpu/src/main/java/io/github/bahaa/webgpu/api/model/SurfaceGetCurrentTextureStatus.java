@@ -10,7 +10,7 @@ public enum SurfaceGetCurrentTextureStatus {
     SUCCESS_OPTIMAL(0x00000001),
 
     /**
-     * The surface can present the frame, but may need reconfiguration.
+     * Still OK - the surface can present the frame, but in a suboptimal way. The surface may need reconfiguration.
      */
     SUCCESS_SUBOPTIMAL(0x00000002),
 
@@ -25,24 +25,45 @@ public enum SurfaceGetCurrentTextureStatus {
     OUTDATED(0x00000004),
 
     /**
-     * The connection to the surface owner was lost.
+     * The connection to whatever owns the surface was lost, or generally needs to be fully reinitialized.
      */
     LOST(0x00000005),
 
     /**
-     * The system ran out of memory.
+     * There was some deterministic error (for example, the surface is not configured, or there was an
+     *
+     * @ref OutStructChainError). Should produce @ref ImplementationDefinedLogging containing details.
      */
-    OUT_OF_MEMORY(0x00000006),
+    ERROR(0x00000006),
 
     /**
-     * The WGPUDevice configured on the WGPUSurface was lost.
+     * The surface texture was not acquired because the window is occluded
+     * (e.g. minimized or fully covered by another window).
+     * <p>
+     * No texture is returned and the @c texture field of
+     * {@code WGPUSurfaceTexture} will be NULL. The surface and swapchain remain
+     * valid -- there is no need to reconfigure or recreate the surface.
+     * <p>
+     * Applications should skip rendering for the current frame and try
+     * again once the window is no longer occluded. If you are using a
+     * windowing library such as winit, listen for the window's "occluded"
+     * event and request a new redraw when the window becomes visible again.
+     * <p>
+     * When does this occur?
+     * <p>
+     * Currently, this status is only produced by the Metal backend on macOS.
+     * When a window is not visible (checked via the @c NSWindow
+     * <p>
+     * {@code occlusionState} property), acquiring the next drawable would block
+     * for up to one second waiting for vsync. wgpu-native returns
+     * {@code Occluded} instead to avoid that hang.
+     * <p>
+     * Other backends (Vulkan, DX12, GL) do not currently report this
+     * status; an occluded window on those backends may produce
+     * {@code WGPUSurfaceGetCurrentTextureStatus_Timeout} or simply succeed
+     * normally.
      */
-    DEVICE_LOST(0x00000007),
-
-    /**
-     * The surface is not configured, or there was an error.
-     */
-    ERROR(0x00000008),
+    OCCLUDED(0x00030001),
 
     FORCE32(0x7FFFFFFF);
 
@@ -61,7 +82,7 @@ public enum SurfaceGetCurrentTextureStatus {
                 return status;
             }
         }
-        return ERROR;
+        throw new IllegalArgumentException("invalid value %d".formatted(value));
     }
 
     public int getValue() {
