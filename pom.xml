@@ -33,6 +33,7 @@
         <version.download-maven-plugin>2.1.0</version.download-maven-plugin>
         <version.jextract-maven-plugin>0.4.4</version.jextract-maven-plugin>
         <version.maven-pmd-plugin>3.28.0</version.maven-pmd-plugin>
+        <version.pmd>7.28.0</version.pmd>
         <version.maven-jxr-plugin>3.6.0</version.maven-jxr-plugin>
         <version.exec-maven-plugin>3.6.4</version.exec-maven-plugin>
 
@@ -95,6 +96,18 @@
                         <excludeRoot>${project.build.directory}/generated-sources</excludeRoot>
                     </excludeRoots>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>net.sourceforge.pmd</groupId>
+                        <artifactId>pmd-core</artifactId>
+                        <version>${version.pmd}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>net.sourceforge.pmd</groupId>
+                        <artifactId>pmd-java</artifactId>
+                        <version>${version.pmd}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

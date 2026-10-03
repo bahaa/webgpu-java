@@ -11,7 +11,7 @@
     <rule ref="category/java/bestpractices.xml/MissingOverride"/>
     <rule ref="category/java/bestpractices.xml/AvoidReassigningLoopVariables"/>
     <rule ref="category/java/bestpractices.xml/UnitTestShouldIncludeAssert"/>
-    <rule ref="category/java/bestpractices.xml/JUnit5TestShouldBePackagePrivate"/>
+    <rule ref="category/java/bestpractices.xml/JUnitJupiterTestShouldBePackagePrivate"/>
     <rule ref="category/java/bestpractices.xml/DefaultLabelNotLastInSwitch"/>
     <rule ref="category/java/bestpractices.xml/PreserveStackTrace"/>
     <rule ref="category/java/bestpractices.xml/PrimitiveWrapperInstantiation"/>
@@ -41,9 +41,7 @@
     <rule ref="category/java/codestyle.xml/UnnecessaryCast"/>
     <rule ref="category/java/codestyle.xml/UseUnderscoresInNumericLiterals"/>
     <rule ref="category/java/codestyle.xml/PackageCase"/>
-    <rule ref="category/java/codestyle.xml/AvoidProtectedMethodInFinalClassNotExtending"/>
     <rule ref="category/java/codestyle.xml/UnnecessaryAnnotationValueElement"/>
-    <rule ref="category/java/codestyle.xml/AvoidProtectedFieldInFinalClass"/>
     <rule ref="category/java/codestyle.xml/LongVariable">
         <!--
             This should prevent `agent mina &#x002D;&#x002D;verbose`
@@ -63,13 +61,13 @@
     <rule ref="category/java/design.xml/AvoidThrowingNullPointerException"/>
     <rule ref="category/java/design.xml/AvoidThrowingRawExceptionTypes"/>
     <rule ref="category/java/design.xml/AvoidUncheckedExceptionsInSignatures"/>
+    <rule ref="category/java/design.xml/ProtectedMemberInFinalClass"/>
 
     <rule ref="category/java/errorprone.xml/AvoidCallingFinalize"/>
-    <rule ref="category/java/errorprone.xml/DontImportSun"/>
-    <rule ref="category/java/errorprone.xml/UselessPureMethodCall"/>
+    <rule ref="category/java/errorprone.xml/UnsupportedJdkApiUsage"/>
     <rule ref="category/java/errorprone.xml/AvoidMultipleUnaryOperators"/>
     <rule ref="category/java/errorprone.xml/ClassCastExceptionWithToArray"/>
-    <rule ref="category/java/errorprone.xml/CheckSkipResult"/>
+    <rule ref="category/java/errorprone.xml/UnusedReturnValue"/>
     <rule ref="category/java/errorprone.xml/CollectionTypeMismatch"/>
     <rule ref="category/java/errorprone.xml/ComparisonWithNaN"/>
     <rule ref="category/java/errorprone.xml/DoNotThrowExceptionInFinally"/>
