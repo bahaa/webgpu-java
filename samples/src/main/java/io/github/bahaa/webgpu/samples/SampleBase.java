@@ -113,6 +113,11 @@ public abstract class SampleBase {
                 glfwPollEvents();
 
                 final var surfaceTexture = surface.currentTexture();
+
+                if (surfaceTexture.status() == SurfaceGetCurrentTextureStatus.OCCLUDED) {
+                    continue;
+                }
+
                 final var texture = surfaceTexture.texture();
 
                 switch (surfaceTexture.status()) {

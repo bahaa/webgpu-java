@@ -17,7 +17,9 @@ class SurfaceTextureImpl implements SurfaceTexture {
     }
 
     public static SurfaceTexture from(final MemorySegment struct) {
-        return new SurfaceTextureImpl(TextureImpl.from(WGPUSurfaceTexture.texture(struct)),
+        final var texture = WGPUSurfaceTexture.texture(struct);
+        return new SurfaceTextureImpl(texture.equals(MemorySegment.NULL) ? null :
+                TextureImpl.from(WGPUSurfaceTexture.texture(struct)),
                 SurfaceGetCurrentTextureStatus.fromValue(WGPUSurfaceTexture.status(struct)));
     }
 

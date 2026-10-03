@@ -36,6 +36,35 @@ public enum SurfaceGetCurrentTextureStatus {
      */
     ERROR(0x00000006),
 
+    /**
+     * The surface texture was not acquired because the window is occluded
+     * (e.g. minimized or fully covered by another window).
+     * <p>
+     * No texture is returned and the @c texture field of
+     * {@code WGPUSurfaceTexture} will be NULL. The surface and swapchain remain
+     * valid -- there is no need to reconfigure or recreate the surface.
+     * <p>
+     * Applications should skip rendering for the current frame and try
+     * again once the window is no longer occluded. If you are using a
+     * windowing library such as winit, listen for the window's "occluded"
+     * event and request a new redraw when the window becomes visible again.
+     * <p>
+     * When does this occur?
+     * <p>
+     * Currently, this status is only produced by the Metal backend on macOS.
+     * When a window is not visible (checked via the @c NSWindow
+     * <p>
+     * {@code occlusionState} property), acquiring the next drawable would block
+     * for up to one second waiting for vsync. wgpu-native returns
+     * {@code Occluded} instead to avoid that hang.
+     * <p>
+     * Other backends (Vulkan, DX12, GL) do not currently report this
+     * status; an occluded window on those backends may produce
+     * {@code WGPUSurfaceGetCurrentTextureStatus_Timeout} or simply succeed
+     * normally.
+     */
+    OCCLUDED(0x00030001),
+
     FORCE32(0x7FFFFFFF);
 
     private final int value;
